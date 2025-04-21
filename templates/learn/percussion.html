@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Learn - Percussion Family{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-4">Meet the Percussion Family</h1>
+    <p class="lead text-center mb-5">Click each instrument to listen to its sound</p>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <!-- Timpani -->
+        <div class="col">
+            <div class="card h-100">
+                <img src="{{ url_for('static', filename='images/percussion/timpani.jpg') }}" class="card-img-top instrument-img" alt="Timpani">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Timpani</h3>
+                    <p class="card-text">Large copper kettledrums with adjustable pitch</p>
+                    <button class="btn btn-primary mb-2 play-sound" data-sound="timpani">Listen</button>
+                    <a href="{{ url_for('learn_instrument', family='percussion', instrument='timpani') }}" class="btn btn-outline-secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Snare Drum -->
+        <div class="col">
+            <div class="card h-100">
+                <img src="{{ url_for('static', filename='images/percussion/snare-drum.jpg') }}" class="card-img-top instrument-img" alt="Snare Drum">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Snare Drum</h3>
+                    <p class="card-text">Sharp, crisp sound with metal snares underneath</p>
+                    <button class="btn btn-primary mb-2 play-sound" data-sound="snare-drum">Listen</button>
+                    <a href="{{ url_for('learn_instrument', family='percussion', instrument='snare-drum') }}" class="btn btn-outline-secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cymbals -->
+        <div class="col">
+            <div class="card h-100">
+                <img src="{{ url_for('static', filename='images/percussion/cymbals.jpg') }}" class="card-img-top instrument-img" alt="Cymbals">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Cymbals</h3>
+                    <p class="card-text">Thin, round metal plates with bright, explosive sound</p>
+                    <button class="btn btn-primary mb-2 play-sound" data-sound="cymbals">Listen</button>
+                    <a href="{{ url_for('learn_instrument', family='percussion', instrument='cymbals') }}" class="btn btn-outline-secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Xylophone -->
+        <div class="col">
+            <div class="card h-100">
+                <img src="{{ url_for('static', filename='images/percussion/xylophone.jpg') }}" class="card-img-top instrument-img" alt="Xylophone">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Xylophone</h3>
+                    <p class="card-text">Wooden bars struck with mallets to produce musical notes</p>
+                    <button class="btn btn-primary mb-2 play-sound" data-sound="xylophone">Listen</button>
+                    <a href="{{ url_for('learn_instrument', family='percussion', instrument='xylophone') }}" class="btn btn-outline-secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+    .instrument-img {
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
+<script>
+$(document).ready(function() {
+    $('.play-sound').click(function() {
+        const instrument = $(this).data('sound');
+        // Here you would add the logic to play the sound
+        alert('Playing ' + instrument + ' sound... (Audio functionality to be implemented)');
+    });
+});
+</script>
+{% endblock %} 

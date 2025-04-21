@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}{{ instrument }} - Coming Soon{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('learn_overview') }}">Learn</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('learn_family', family=family) }}">{{ family|title }} Family</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ instrument }}</li>
+        </ol>
+    </nav>
+
+    <div class="card text-center mt-5">
+        <div class="card-body py-5">
+            <i class="fas fa-tools feature-icon mb-4"></i>
+            <h1 class="card-title">Coming Soon!</h1>
+            <p class="lead">Detailed information about the {{ instrument }} is currently being composed.</p>
+            <p class="mb-4">Please check back later for a comprehensive guide about this wonderful instrument.</p>
+            <a href="{{ url_for('learn_family', family=family) }}" class="btn btn-primary">
+                <i class="fas fa-arrow-left me-2"></i>Return to {{ family|title }} Family
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+.feature-icon {
+    font-size: 4rem;
+    color: var(--golden-yellow);
+}
+
+.card {
+    border-color: var(--golden-yellow);
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.1);
+}
+
+.breadcrumb {
+    background-color: var(--cream);
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+.breadcrumb-item a {
+    color: var(--primary-brown);
+    text-decoration: none;
+}
+
+.breadcrumb-item.active {
+    color: var(--secondary-brown);
+}
+</style>
+{% endblock %} 

@@ -1,0 +1,152 @@
+/* Color Variables */
+:root {
+    --primary-brown: #8B4513;
+    --secondary-brown: #A0522D;
+    --golden-yellow: #DAA520;
+    --light-gold: #FFE5B4;
+    --cream: #FFF8DC;
+}
+
+/* General Styles */
+body {
+    font-family: 'Crimson Text', 'Times New Roman', serif;
+    background-color: var(--cream);
+}
+
+/* Card Hover Effects */
+.card {
+    transition: all 0.3s ease;
+    background-color: #fff;
+    border: 1px solid var(--primary-brown);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.2);
+}
+
+/* Navigation Styles */
+.navbar {
+    background-color: var(--primary-brown) !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: var(--golden-yellow) !important;
+}
+
+.nav-link {
+    color: var(--light-gold) !important;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--golden-yellow) !important;
+}
+
+/* Dropdown Menu Styles */
+.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+}
+
+.dropdown-menu {
+    background-color: var(--cream);
+    border: 1px solid var(--golden-yellow);
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.2);
+    display: none;
+}
+
+.dropdown-item {
+    color: var(--primary-brown);
+    transition: all 0.2s ease;
+    padding: 0.5rem 1.5rem;
+}
+
+.dropdown-item:hover {
+    background-color: var(--light-gold);
+    color: var(--primary-brown);
+}
+
+.dropdown-divider {
+    border-top: 1px solid var(--golden-yellow);
+    opacity: 0.5;
+    margin: 0.5rem 0;
+}
+
+/* Button Styles */
+.btn {
+    border-radius: 25px;
+    padding: 8px 20px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-brown);
+    border-color: var(--primary-brown);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-brown);
+    border-color: var(--secondary-brown);
+}
+
+.btn-success {
+    background-color: var(--golden-yellow);
+    border-color: var(--golden-yellow);
+    color: var(--primary-brown);
+}
+
+.btn-success:hover {
+    background-color: #B8860B;
+    border-color: #B8860B;
+    color: white;
+}
+
+/* Image Styles */
+.instrument-img {
+    transition: transform 0.3s ease;
+}
+
+.instrument-img:hover {
+    transform: scale(1.05);
+}
+
+/* Section Headers */
+h1, h2, h3 {
+    color: var(--primary-brown);
+}
+
+.lead {
+    color: var(--secondary-brown);
+}
+
+/* Locked Feature Style */
+.locked-feature {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background-color: rgba(139, 69, 19, 0.1);
+}
+
+/* Home Page Specific */
+.home-card {
+    margin-bottom: 2rem;
+    border: 2px solid var(--golden-yellow);
+    background-color: white;
+}
+
+.home-card:hover {
+    border-color: var(--primary-brown);
+}
+
+.locked-button {
+    background-color: #D3D3D3;
+    border-color: #A9A9A9;
+    cursor: not-allowed;
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    color: var(--golden-yellow);
+    margin-bottom: 1rem;
+}

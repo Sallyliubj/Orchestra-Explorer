@@ -1,0 +1,36 @@
+{% extends "learn/instruments/base_instrument.html" %}
+
+{% set family = 'strings' %}
+{% set instrument_id = 'violin' %}
+{% set instrument_name = 'violin' %}
+{% set description = 'The violin is the highest-pitched member of the string family. Known for its versatility and expressive capabilities, it often carries the melody in orchestral music.' %}
+
+{% set features = [
+    'Made primarily of wood with four strings tuned in perfect fifths',
+    'Played with a bow (arco) or by plucking the strings (pizzicato)',
+    'Range spans about 4 octaves',
+    'Produces sound through vibration of strings amplified by the hollow wooden body',
+    'Features a distinctive scroll, pegbox, and f-holes'
+] %}
+
+{% set technique = 'The violin is played by drawing the bow across the strings while pressing them down with the left hand fingers to create different notes. The bow is held in the right hand, and various techniques like vibrato, staccato, and legato are used to create different effects.' %}
+
+{% set role = 'The violin section is the largest in the orchestra and often carries the main melody. First violins typically play the highest line while second violins provide harmonic support or counter-melodies.' %}
+
+{% set famous_pieces = [
+    {'title': 'The Four Seasons', 'composer': 'Antonio Vivaldi'},
+    {'title': 'Violin Concerto in D major', 'composer': 'Pyotr Tchaikovsky'},
+    {'title': 'Violin Concerto in E minor', 'composer': 'Felix Mendelssohn'},
+    {'title': 'Chaconne from Partita No. 2', 'composer': 'J.S. Bach'}
+] %}
+
+{% set fun_facts = [
+    'The modern violin has been largely unchanged in design since the 16th century',
+    'A violin typically has over 70 separate pieces of wood in its construction',
+    'The strings were originally made from sheep gut but are now usually made from synthetic materials or metal',
+    'Some of the most valuable violins in the world were made by Antonio Stradivari and can be worth millions of dollars'
+] %}
+
+{% block content %}
+{{ super() }}
+{% endblock %} 

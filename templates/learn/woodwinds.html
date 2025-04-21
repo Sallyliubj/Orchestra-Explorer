@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Learn - Woodwind Family{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-4">Meet the Woodwind Family</h1>
+    <p class="lead text-center mb-5">Click each instrument to listen to its sound</p>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <!-- Flute -->
+        <div class="col">
+            <div class="card h-100">
+                <img src="{{ url_for('static', filename='images/woodwinds/flute.jpg') }}" class="card-img-top instrument-img" alt="Flute">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Flute</h3>
+                    <p class="card-text">A high-pitched woodwind with a bright, clear tone</p>
+                    <button class="btn btn-primary mb-2 play-sound" data-sound="flute">Listen</button>
+                    <a href="{{ url_for('learn_instrument', family='woodwinds', instrument='flute') }}" class="btn btn-outline-secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clarinet -->
+        <div class="col">
+            <div class="card h-100">
+                <img src="{{ url_for('static', filename='images/woodwinds/clarinet.jpg') }}" class="card-img-top instrument-img" alt="Clarinet">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Clarinet</h3>
+                    <p class="card-text">Known for its warm, rich middle register</p>
+                    <button class="btn btn-primary mb-2 play-sound" data-sound="clarinet">Listen</button>
+                    <a href="{{ url_for('learn_instrument', family='woodwinds', instrument='clarinet') }}" class="btn btn-outline-secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Oboe -->
+        <div class="col">
+            <div class="card h-100">
+                <img src="{{ url_for('static', filename='images/woodwinds/oboe.jpg') }}" class="card-img-top instrument-img" alt="Oboe">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Oboe</h3>
+                    <p class="card-text">Distinctive double-reed instrument with a penetrating sound</p>
+                    <button class="btn btn-primary mb-2 play-sound" data-sound="oboe">Listen</button>
+                    <a href="{{ url_for('learn_instrument', family='woodwinds', instrument='oboe') }}" class="btn btn-outline-secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bassoon -->
+        <div class="col">
+            <div class="card h-100">
+                <img src="{{ url_for('static', filename='images/woodwinds/bassoon.jpg') }}" class="card-img-top instrument-img" alt="Bassoon">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Bassoon</h3>
+                    <p class="card-text">The largest woodwind with a deep, rich tone</p>
+                    <button class="btn btn-primary mb-2 play-sound" data-sound="bassoon">Listen</button>
+                    <a href="{{ url_for('learn_instrument', family='woodwinds', instrument='bassoon') }}" class="btn btn-outline-secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+    .instrument-img {
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
+<script>
+$(document).ready(function() {
+    $('.play-sound').click(function() {
+        const instrument = $(this).data('sound');
+        // Here you would add the logic to play the sound
+        alert('Playing ' + instrument + ' sound... (Audio functionality to be implemented)');
+    });
+});
+</script>
+{% endblock %} 

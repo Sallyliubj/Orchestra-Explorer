@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <h1 class="display-4 mb-4">Welcome to Orchestra Explorer!</h1>
+    <p class="lead mb-5">Learn to identify musical instruments within an orchestra.</p>
+
+    <div class="row justify-content-center">
+        <!-- Start Learning Button -->
+        <div class="col-md-8 col-lg-6">
+            <div class="home-card card mb-4">
+                <div class="card-body text-center py-4">
+                    <i class="fas fa-music feature-icon"></i>
+                    <h3 class="card-title">Start Learning</h3>
+                    <p class="card-text">Explore the fascinating world of orchestra instruments and their families.</p>
+                    <a href="{{ url_for('learn_overview') }}" class="btn btn-primary btn-lg">Begin Your Journey</a>
+                </div>
+            </div>
+
+            <!-- Take Quiz Button (Locked) -->
+            <div class="home-card card mb-4 locked-feature">
+                <div class="card-body text-center py-4">
+                    <i class="fas fa-question-circle feature-icon"></i>
+                    <h3 class="card-title">Take the Quiz</h3>
+                    <p class="card-text">Test your knowledge about orchestra instruments.</p>
+                    <button class="btn btn-lg locked-button" disabled>
+                        <i class="fas fa-lock me-2"></i>Complete Learning First
+                    </button>
+                </div>
+            </div>
+
+            <!-- Orchestra Performance Button (Locked) -->
+            <div class="home-card card mb-4 locked-feature">
+                <div class="card-body text-center py-4">
+                    <i class="fas fa-theater-masks feature-icon"></i>
+                    <h3 class="card-title">See Orchestra Performance</h3>
+                    <p class="card-text">Experience a virtual orchestra performance.</p>
+                    <button class="btn btn-lg locked-button" disabled>
+                        <i class="fas fa-lock me-2"></i>Complete All Quizzes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    $('.locked-button').click(function(e) {
+        e.preventDefault();
+    });
+});
+</script>
+{% endblock %}
+{% endblock %} 

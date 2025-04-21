@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{# Default empty values for variables #}
+{% set family = family|default('') %}
+{% set instrument_id = instrument_id|default('') %}
+{% set instrument_name = instrument_name|default('') %}
+{% set description = description|default('') %}
+{% set features = features|default([]) %}
+{% set technique = technique|default('') %}
+{% set role = role|default('') %}
+{% set famous_pieces = famous_pieces|default([]) %}
+{% set fun_facts = fun_facts|default([]) %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('learn_overview') }}">Learn</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('learn_family', family=family) }}">{{ family|title }} Family</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ instrument_name|title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row mt-4">
+        <!-- Instrument Image and Basic Info -->
+        <div class="col-md-6">
+            <div class="card">
+                <img src="{{ url_for('static', filename='images/' + family + '/' + instrument_id + '.jpg') }}" 
+                     class="card-img-top instrument-detail-img" alt="{{ instrument_name }}">
+                <div class="card-body text-center">
+                    <h1 class="card-title">{{ instrument_name|title }}</h1>
+                    <p class="lead">{{ description }}</p>
+                    <button class="btn btn-primary btn-lg play-sound" data-sound="{{ instrument_id }}">
+                        <i class="fas fa-play me-2"></i>Listen to the Sound
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instrument Details -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">About the {{ instrument_name|title }}</h2>
+                    
+                    <!-- Key Features -->
+                    <h3 class="h5 text-primary">Key Features</h3>
+                    <ul class="feature-list mb-4">
+                        {% for feature in features %}
+                        <li>{{ feature }}</li>
+                        {% endfor %}
+                    </ul>
+
+                    <!-- Playing Technique -->
+                    <h3 class="h5 text-primary">Playing Technique</h3>
+                    <p>{{ technique }}</p>
+
+                    <!-- Role in Orchestra -->
+                    <h3 class="h5 text-primary">Role in the Orchestra</h3>
+                    <p>{{ role }}</p>
+
+                    <!-- Famous Pieces -->
+                    <h3 class="h5 text-primary">Famous Pieces</h3>
+                    <ul class="famous-pieces">
+                        {% for piece in famous_pieces %}
+                        <li>{{ piece.title }} by {{ piece.composer }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Fun Facts -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h3 class="h5 text-primary mb-3">Fun Facts</h3>
+                    <ul class="fun-facts">
+                        {% for fact in fun_facts %}
+                        <li>{{ fact }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+.instrument-detail-img {
+    height: 400px;
+    object-fit: contain;
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+.feature-list, .famous-pieces, .fun-facts {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.feature-list li, .famous-pieces li, .fun-facts li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.feature-list li:last-child, .famous-pieces li:last-child, .fun-facts li:last-child {
+    border-bottom: none;
+}
+
+.breadcrumb {
+    background-color: var(--cream);
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+.breadcrumb-item a {
+    color: var(--primary-brown);
+    text-decoration: none;
+}
+
+.breadcrumb-item.active {
+    color: var(--secondary-brown);
+}
+
+.text-primary {
+    color: var(--primary-brown) !important;
+}
+
+.card {
+    border-color: var(--golden-yellow);
+    margin-bottom: 20px;
+}
+</style>
+
+<script>
+$(document).ready(function() {
+    $('.play-sound').click(function() {
+        const instrument = $(this).data('sound');
+        // Here you would add the logic to play the sound
+        alert('Playing ' + instrument + ' sound... (Audio functionality to be implemented)');
+    });
+});
+</script>
+{% endblock %} 
