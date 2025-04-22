@@ -15,6 +15,9 @@
                 <h3 class="mt-3">Flute</h3>
                 <p class="text-muted">A high-pitched woodwind with a bright, clear tone</p>
             </a>
+            <button class="btn play-sound" data-sound="flute">
+                <i class="fas fa-play-circle"></i> Play Sound
+            </button>
         </div>
 
         <!-- Clarinet -->
@@ -24,6 +27,9 @@
                 <h3 class="mt-3">Clarinet</h3>
                 <p class="text-muted">Known for its warm, rich middle register</p>
             </a>
+            <button class="btn play-sound" data-sound="clarinet">
+                <i class="fas fa-play-circle"></i> Play Sound
+            </button>
         </div>
 
         <!-- Oboe -->
@@ -33,6 +39,9 @@
                 <h3 class="mt-3">Oboe</h3>
                 <p class="text-muted">Distinctive double-reed instrument with a penetrating sound</p>
             </a>
+            <button class="btn play-sound" data-sound="oboe">
+                <i class="fas fa-play-circle"></i> Play Sound
+            </button>
         </div>
 
         <!-- Bassoon -->
@@ -42,6 +51,9 @@
                 <h3 class="mt-3">Bassoon</h3>
                 <p class="text-muted">The largest woodwind with a deep, rich tone</p>
             </a>
+            <button class="btn play-sound" data-sound="bassoon">
+                <i class="fas fa-play-circle"></i> Play Sound
+            </button>
         </div>
     </div>
 </div>
@@ -65,5 +77,30 @@
     .instrument-link:hover h3 {
         color: var(--primary-brown);
     }
+    .play-sound {
+        margin-top: 10px;
+        color: var(--cream);
+        transition: all 0.3s ease;
+    }
+    .play-sound:hover {
+        background-color: var(--primary-brown);
+        color: white;
+    }
+    .play-sound i {
+        margin-right: 5px;
+    }
 </style>
+
+<script>
+$(document).ready(function() {
+    $('.play-sound').click(function() {
+        const instrument = $(this).data('sound');
+        const audio = new Audio(`/static/sounds/${instrument}.mp3`);
+        audio.play().catch(error => {
+            console.log('Error playing sound:', error);
+            alert('Sound will be available soon!');
+        });
+    });
+});
+</script>
 {% endblock %} 

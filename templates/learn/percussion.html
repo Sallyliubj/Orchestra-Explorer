@@ -15,6 +15,9 @@
                 <h3 class="mt-3">Timpani</h3>
                 <p class="text-muted">Large copper kettledrums with adjustable pitch</p>
             </a>
+            <button class="btn play-sound" data-sound="timpani">
+                <i class="fas fa-play-circle"></i> Play Sound
+            </button>
         </div>
 
         <!-- Snare Drum -->
@@ -24,6 +27,9 @@
                 <h3 class="mt-3">Snare Drum</h3>
                 <p class="text-muted">Sharp, crisp sound with metal snares underneath</p>
             </a>
+            <button class="btn play-sound" data-sound="snare">
+                <i class="fas fa-play-circle"></i> Play Sound
+            </button>
         </div>
 
         <!-- Bass Drum -->
@@ -33,6 +39,9 @@
                 <h3 class="mt-3">Bass Drum</h3>
                 <p class="text-muted">Deep, resonant sound that provides the foundation</p>
             </a>
+            <button class="btn play-sound" data-sound="bassdrum">
+                <i class="fas fa-play-circle"></i> Play Sound
+            </button>
         </div>
 
         <!-- Xylophone -->
@@ -42,6 +51,9 @@
                 <h3 class="mt-3">Xylophone</h3>
                 <p class="text-muted">Wooden bars struck with mallets to produce musical notes</p>
             </a>
+            <button class="btn play-sound" data-sound="xylophone">
+                <i class="fas fa-play-circle"></i> Play Sound
+            </button>
         </div>
     </div>
 </div>
@@ -65,5 +77,30 @@
     .instrument-link:hover h3 {
         color: var(--primary-brown);
     }
+    .play-sound {
+        margin-top: 10px;
+        color: var(--cream);
+        transition: all 0.3s ease;
+    }
+    .play-sound:hover {
+        background-color: var(--primary-brown);
+        color: white;
+    }
+    .play-sound i {
+        margin-right: 5px;
+    }
 </style>
+
+<script>
+$(document).ready(function() {
+    $('.play-sound').click(function() {
+        const instrument = $(this).data('sound');
+        const audio = new Audio(`/static/sounds/${instrument}.mp3`);
+        audio.play().catch(error => {
+            console.log('Error playing sound:', error);
+            alert('Sound will be available soon!');
+        });
+    });
+});
+</script>
 {% endblock %} 
