@@ -1,0 +1,36 @@
+{% extends "learn/instruments/base_instrument.html" %}
+
+{% set family = 'woodwinds' %}
+{% set instrument_id = 'flute' %}
+{% set instrument_name = 'flute' %}
+{% set description = 'The flute is the highest-pitched woodwind instrument, known for its bright, clear tone and agile nature. Despite being made of metal, it\'s classified as a woodwind because early flutes were made of wood.' %}
+
+{% set features = [
+    'Made of silver or silver-plated metal with approximately 16 keys',
+    'Played horizontally (transverse) with air blown across the embouchure hole',
+    'Three-octave range from middle C to high C',
+    'No reed required - sound produced by blowing across the tone hole',
+    'Highly agile instrument capable of rapid passages and trills'
+] %}
+
+{% set technique = 'The flute is held horizontally to the right side of the player. Sound is produced by blowing air across the embouchure hole while pressing keys to change notes. The player must control their breath and embouchure (lip position) carefully to maintain proper tone and pitch. Various techniques like double-tonguing, flutter-tonguing, and harmonics create different effects.' %}
+
+{% set role = 'The flute often carries the melody in orchestral music, particularly in high, bright passages. It can provide bird-like effects, pastoral themes, and brilliant technical displays. In chamber music, the flute is featured in various combinations and is particularly effective in works with other woodwinds or strings.' %}
+
+{% set famous_pieces = [
+    {'title': 'Syrinx for Solo Flute', 'composer': 'Claude Debussy'},
+    {'title': 'Flute Concerto in G major', 'composer': 'Wolfgang Amadeus Mozart'},
+    {'title': 'Prélude à l\'après-midi d\'un faune', 'composer': 'Claude Debussy'},
+    {'title': 'Peter and the Wolf (Bird Theme)', 'composer': 'Sergei Prokofiev'}
+] %}
+
+{% set fun_facts = [
+    'The modern flute was developed by Theobald Boehm in the 1830s',
+    'The flute is one of the oldest known musical instruments, with examples dating back 35,000 years',
+    'Most orchestras employ 2-3 flutists, with one doubling on piccolo',
+    'The flute is the only woodwind that doesn\'t use a reed to produce sound'
+] %}
+
+{% block content %}
+{{ super() }}
+{% endblock %} 

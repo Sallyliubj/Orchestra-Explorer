@@ -1,0 +1,36 @@
+{% extends "learn/instruments/base_instrument.html" %}
+
+{% set family = 'woodwinds' %}
+{% set instrument_id = 'oboe' %}
+{% set instrument_name = 'oboe' %}
+{% set description = 'The oboe is a double-reed woodwind instrument with a distinctive, penetrating tone that can be heard clearly through the entire orchestra. It has a particularly expressive voice that can range from sweet and pastoral to bold and dramatic.' %}
+
+{% set features = [
+    'Made of wood (usually grenadilla) with a conical bore',
+    'Double-reed instrument with complex key system',
+    'Range spans about two and a half octaves',
+    'Distinctive bright, penetrating tone quality',
+    'Traditionally provides the tuning A for the orchestra'
+] %}
+
+{% set technique = 'The oboe is played by blowing through two thin pieces of cane (the double reed) while pressing keys to change notes. The player must maintain precise control of their embouchure and air pressure, as the small opening between the reeds requires high air pressure but minimal air flow. Various techniques include vibrato, articulation patterns, and special fingerings for trills and ornaments.' %}
+
+{% set role = 'The oboe often carries important melodic lines in orchestral music, particularly in slow, expressive passages. It is frequently chosen for pastoral or melancholic themes. The oboe\'s penetrating tone makes it ideal for solos that need to project over the orchestra, and it traditionally gives the tuning A before performances.' %}
+
+{% set famous_pieces = [
+    {'title': 'Symphony No. 5 (First movement)', 'composer': 'Ludwig van Beethoven'},
+    {'title': 'Oboe Concerto in C major', 'composer': 'Wolfgang Amadeus Mozart'},
+    {'title': 'Swan Lake (oboe solos)', 'composer': 'Pyotr Tchaikovsky'},
+    {'title': 'Peter and the Wolf (Duck Theme)', 'composer': 'Sergei Prokofiev'}
+] %}
+
+{% set fun_facts = [
+    'Oboists must make their own reeds, a skill that takes years to master',
+    'The word "oboe" comes from the French "hautbois," meaning "high wood"',
+    'Professional oboists typically spend 1-2 hours making reeds each day',
+    'The oboe is a descendant of the shawm, a medieval double-reed instrument'
+] %}
+
+{% block content %}
+{{ super() }}
+{% endblock %} 

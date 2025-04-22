@@ -1,0 +1,36 @@
+{% extends "learn/instruments/base_instrument.html" %}
+
+{% set family = 'woodwinds' %}
+{% set instrument_id = 'clarinet' %}
+{% set instrument_name = 'clarinet' %}
+{% set description = 'The clarinet is a versatile woodwind instrument known for its wide range and warm, expressive tone. It has one of the largest ranges of any woodwind instrument and can produce both mellow and bright sounds.' %}
+
+{% set features = [
+    'Made of wood (usually grenadilla) or plastic with approximately 17 keys',
+    'Single-reed instrument with a cylindrical bore',
+    'Range spans over three octaves',
+    'Unique ability to play very softly and smoothly between notes',
+    'Available in different keys, with B♭ being most common for orchestra'
+] %}
+
+{% set technique = 'The clarinet is played by blowing air between a single reed and the mouthpiece while pressing keys to change notes. The player uses their embouchure to control tone and tuning, and their breath control to manage dynamics. The instrument is held at an angle in front of the player. Special techniques include glissando, multiphonics, and various articulations.' %}
+
+{% set role = 'The clarinet is extremely versatile in the orchestra, capable of both melodic and harmonic roles. It can blend well with other woodwinds or strings, and its wide range allows it to play bass lines or soaring melodies. The instrument is particularly known for its ability to play smooth, connected passages and its rich, dark lower register.' %}
+
+{% set famous_pieces = [
+    {'title': 'Clarinet Concerto in A major', 'composer': 'Wolfgang Amadeus Mozart'},
+    {'title': 'Rhapsody in Blue (opening glissando)', 'composer': 'George Gershwin'},
+    {'title': 'Symphony No. 3 (Organ Symphony)', 'composer': 'Camille Saint-Saëns'},
+    {'title': 'Peter and the Wolf (Cat Theme)', 'composer': 'Sergei Prokofiev'}
+] %}
+
+{% set fun_facts = [
+    'The clarinet was invented around 1700 by Johann Christoph Denner',
+    'It is the only woodwind instrument that can play a true glissando',
+    'The clarinet "overblows" at the twelfth (octave plus a fifth) unlike other woodwinds',
+    'Mozart wrote his clarinet concerto for his friend Anton Stadler, who played a special extended-range clarinet'
+] %}
+
+{% block content %}
+{{ super() }}
+{% endblock %} 

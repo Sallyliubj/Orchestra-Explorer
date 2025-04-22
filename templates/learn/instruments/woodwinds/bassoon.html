@@ -1,0 +1,36 @@
+{% extends "learn/instruments/base_instrument.html" %}
+
+{% set family = 'woodwinds' %}
+{% set instrument_id = 'bassoon' %}
+{% set instrument_name = 'bassoon' %}
+{% set description = 'The bassoon is the largest and lowest-pitched woodwind instrument commonly used in orchestras. Known for its wide range and distinctive tone, it can produce sounds ranging from deep and sonorous to high and comedic.' %}
+
+{% set features = [
+    'Made of maple wood with a conical bore that doubles back on itself',
+    'Double-reed instrument with complex key system',
+    'Range spans over three octaves',
+    'Distinctive boot joint and long bocal (metal tube for reed)',
+    'Requires both hands and thumb keys for proper playing'
+] %}
+
+{% set technique = 'The bassoon is played by blowing through a double reed attached to a metal bocal while pressing keys with both hands and thumbs. Due to its size and complexity, it requires careful coordination of fingers and air support. The player must also master various cross-fingerings and alternate fingerings for different effects. Special techniques include flutter-tonguing, multiphonics, and various articulation patterns.' %}
+
+{% set role = 'The bassoon serves as the bass voice of the woodwind section, though it is equally capable of playing tenor melodies. It can provide comedic effects (earning it the nickname "clown of the orchestra") or deep, serious bass lines. In chamber music, it adds depth and warmth to woodwind quintets and other ensembles.' %}
+
+{% set famous_pieces = [
+    {'title': 'The Sorcerer\'s Apprentice', 'composer': 'Paul Dukas'},
+    {'title': 'Bassoon Concerto in B-flat major', 'composer': 'Wolfgang Amadeus Mozart'},
+    {'title': 'The Rite of Spring (opening solo)', 'composer': 'Igor Stravinsky'},
+    {'title': 'Peter and the Wolf (Grandfather Theme)', 'composer': 'Sergei Prokofiev'}
+] %}
+
+{% set fun_facts = [
+    'If unfolded, the bassoon would be about 8 feet (2.5m) long',
+    'Like oboists, bassoonists must make their own reeds',
+    'The bassoon uses over 20 keys to cover its tone holes',
+    'The German and French bassoon systems have different fingering patterns'
+] %}
+
+{% block content %}
+{{ super() }}
+{% endblock %} 
