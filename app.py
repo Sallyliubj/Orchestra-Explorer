@@ -41,11 +41,9 @@ def learn_instrument(family, instrument):
                             instrument=instrument.replace('-', ' ').title())
 
 # Quiz routes
-@app.route('/quiz/<int:quiz_id>')
-def quiz(quiz_id):
-    if quiz_id < 1 or quiz_id > 5:  # Assuming we have 5 quizzes
-        abort(404)
-    return render_template(f'quiz/quiz_{quiz_id}.html')
+@app.route('/quiz')
+def quiz():
+    return render_template(f'quiz.html')
 
 if __name__ == '__main__':
     app.run(debug=True) 
