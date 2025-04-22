@@ -25,7 +25,7 @@ def learn_instrument(family, instrument):
     valid_instruments = {
         'strings': ['violin', 'viola', 'cello', 'bass', 'harp'],
         'woodwinds': ['flute', 'clarinet', 'oboe', 'bassoon'],
-        'brass': ['trumpet', 'trombone', 'french-horn', 'tuba'],
+        'brass': ['trumpet', 'trombone', 'french_horn', 'tuba'],
         'percussion': ['timpani', 'snare', 'bassdrum', 'xylophone']
     }
     

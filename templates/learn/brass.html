@@ -3,6 +3,13 @@
 {% block title %}Learn - Brass Family{% endblock %}
 
 {% block content %}
+<!-- Back to Overview Button -->
+<div class="mb-4">
+    <a href="{{ url_for('learn_overview') }}" class="btn btn-outline-secondary button-color">
+        &larr; Back to Overview
+    </a>
+</div>
+
 <div class="container py-5">
     <h1 class="text-center mb-4">Meet the Brass Family</h1>
     <p class="lead text-center mb-5">Click each instrument to learn more</p>
@@ -28,8 +35,8 @@
 
         <!-- French Horn -->
         <div class="col text-center">
-            <a href="{{ url_for('learn_instrument', family='brass', instrument='french-horn') }}" class="instrument-link">
-                <img src="{{ url_for('static', filename='images/brass/french-horn.png') }}" class="instrument-img" alt="French Horn">
+            <a href="{{ url_for('learn_instrument', family='brass', instrument='french_horn') }}" class="instrument-link">
+                <img src="{{ url_for('static', filename='images/brass/french_horn.png') }}" class="instrument-img" alt="French Horn">
                 <h3 class="mt-3">French Horn</h3>
                 <p class="text-muted">Mellow and warm with a circular shape</p>
             </a>
@@ -64,6 +71,10 @@
     }
     .instrument-link:hover h3 {
         color: var(--primary-brown);
+    }
+    .button-color{
+        background-color: var(--primary-brown);
+        color: var(--cream);
     }
 </style>
 {% endblock %} 
