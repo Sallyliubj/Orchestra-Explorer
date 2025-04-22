@@ -5,59 +5,43 @@
 {% block content %}
 <div class="container py-5">
     <h1 class="text-center mb-4">Meet the Percussion Family</h1>
-    <p class="lead text-center mb-5">Click each instrument to listen to its sound</p>
+    <p class="lead text-center mb-5">Click each instrument to learn more</p>
 
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 justify-content-center">
         <!-- Timpani -->
-        <div class="col">
-            <div class="card h-100">
-                <img src="{{ url_for('static', filename='images/percussion/timpani.jpg') }}" class="card-img-top instrument-img" alt="Timpani">
-                <div class="card-body text-center">
-                    <h3 class="card-title">Timpani</h3>
-                    <p class="card-text">Large copper kettledrums with adjustable pitch</p>
-                    <button class="btn btn-primary mb-2 play-sound" data-sound="timpani">Listen</button>
-                    <a href="{{ url_for('learn_instrument', family='percussion', instrument='timpani') }}" class="btn btn-outline-secondary">Learn More</a>
-                </div>
-            </div>
+        <div class="col text-center">
+            <a href="{{ url_for('learn_instrument', family='percussion', instrument='timpani') }}" class="instrument-link">
+                <img src="{{ url_for('static', filename='images/percussion/timpani.png') }}" class="instrument-img" alt="Timpani">
+                <h3 class="mt-3">Timpani</h3>
+                <p class="text-muted">Large copper kettledrums with adjustable pitch</p>
+            </a>
         </div>
 
         <!-- Snare Drum -->
-        <div class="col">
-            <div class="card h-100">
-                <img src="{{ url_for('static', filename='images/percussion/snare-drum.jpg') }}" class="card-img-top instrument-img" alt="Snare Drum">
-                <div class="card-body text-center">
-                    <h3 class="card-title">Snare Drum</h3>
-                    <p class="card-text">Sharp, crisp sound with metal snares underneath</p>
-                    <button class="btn btn-primary mb-2 play-sound" data-sound="snare-drum">Listen</button>
-                    <a href="{{ url_for('learn_instrument', family='percussion', instrument='snare-drum') }}" class="btn btn-outline-secondary">Learn More</a>
-                </div>
-            </div>
+        <div class="col text-center">
+            <a href="{{ url_for('learn_instrument', family='percussion', instrument='snare') }}" class="instrument-link">
+                <img src="{{ url_for('static', filename='images/percussion/snare.png') }}" class="instrument-img" alt="Snare Drum">
+                <h3 class="mt-3">Snare Drum</h3>
+                <p class="text-muted">Sharp, crisp sound with metal snares underneath</p>
+            </a>
         </div>
 
-        <!-- Cymbals -->
-        <div class="col">
-            <div class="card h-100">
-                <img src="{{ url_for('static', filename='images/percussion/cymbals.jpg') }}" class="card-img-top instrument-img" alt="Cymbals">
-                <div class="card-body text-center">
-                    <h3 class="card-title">Cymbals</h3>
-                    <p class="card-text">Thin, round metal plates with bright, explosive sound</p>
-                    <button class="btn btn-primary mb-2 play-sound" data-sound="cymbals">Listen</button>
-                    <a href="{{ url_for('learn_instrument', family='percussion', instrument='cymbals') }}" class="btn btn-outline-secondary">Learn More</a>
-                </div>
-            </div>
+        <!-- Bass Drum -->
+        <div class="col text-center">
+            <a href="{{ url_for('learn_instrument', family='percussion', instrument='bassdrum') }}" class="instrument-link">
+                <img src="{{ url_for('static', filename='images/percussion/bassdrum.png') }}" class="instrument-img" alt="Bass Drum">
+                <h3 class="mt-3">Bass Drum</h3>
+                <p class="text-muted">Deep, resonant sound that provides the foundation</p>
+            </a>
         </div>
 
         <!-- Xylophone -->
-        <div class="col">
-            <div class="card h-100">
-                <img src="{{ url_for('static', filename='images/percussion/xylophone.jpg') }}" class="card-img-top instrument-img" alt="Xylophone">
-                <div class="card-body text-center">
-                    <h3 class="card-title">Xylophone</h3>
-                    <p class="card-text">Wooden bars struck with mallets to produce musical notes</p>
-                    <button class="btn btn-primary mb-2 play-sound" data-sound="xylophone">Listen</button>
-                    <a href="{{ url_for('learn_instrument', family='percussion', instrument='xylophone') }}" class="btn btn-outline-secondary">Learn More</a>
-                </div>
-            </div>
+        <div class="col text-center">
+            <a href="{{ url_for('learn_instrument', family='percussion', instrument='xylophone') }}" class="instrument-link">
+                <img src="{{ url_for('static', filename='images/percussion/xylophone.png') }}" class="instrument-img" alt="Xylophone">
+                <h3 class="mt-3">Xylophone</h3>
+                <p class="text-muted">Wooden bars struck with mallets to produce musical notes</p>
+            </a>
         </div>
     </div>
 </div>
@@ -67,16 +51,19 @@
 <style>
     .instrument-img {
         height: 200px;
-        object-fit: cover;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+    .instrument-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+    .instrument-link:hover .instrument-img {
+        transform: scale(1.05);
+    }
+    .instrument-link:hover h3 {
+        color: var(--primary-brown);
     }
 </style>
-<script>
-$(document).ready(function() {
-    $('.play-sound').click(function() {
-        const instrument = $(this).data('sound');
-        // Here you would add the logic to play the sound
-        alert('Playing ' + instrument + ' sound... (Audio functionality to be implemented)');
-    });
-});
-</script>
 {% endblock %} 
