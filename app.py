@@ -23,10 +23,10 @@ def learn_family(family):
 def learn_instrument(family, instrument):
     # Dictionary of valid instruments for each family
     valid_instruments = {
-        'strings': ['violin', 'viola', 'cello', 'double-bass'],
+        'strings': ['violin', 'viola', 'cello', 'bass', 'harp'],
         'woodwinds': ['flute', 'clarinet', 'oboe', 'bassoon'],
         'brass': ['trumpet', 'trombone', 'french-horn', 'tuba'],
-        'percussion': ['timpani', 'snare-drum', 'cymbals', 'xylophone']
+        'percussion': ['timpani', 'snare', 'bassdrum', 'xylophone']
     }
     
     if family not in valid_instruments or instrument not in valid_instruments[family]:
