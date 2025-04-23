@@ -1,0 +1,32 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "prompt": "Which one does not belong to the group?",
+      "options": [
+        { "value": "violin", "image": "violin.png" },
+        { "value": "cello", "image": "cello.png" },
+        { "value": "trumpet", "image": "trumpet.png" }
+      ],
+      "correct": "trumpet",
+      "hint": "Listen carefully: strings vs brass.",
+      "feedback": "This isn’t the odd one out – try again!"
+    },
+    {
+      "id": 2,
+      "type": "single-sound",
+      "prompt": "Which instrument makes this sound?",
+      "sound": "violin.mp3",
+      "options": [
+        { "value": "timpani", "image": "timpani.png" },
+        { "value": "violin", "image": "violin.png" },
+        { "value": "tuba", "image": "tuba.png" },
+        { "value": "clarinet", "image": "clarinet.png" }
+      ],
+      "correct": "violin",
+      "hint": "Classes: percussion, strings, brass, woodwind.",
+      "feedback": "Nope—think about which family that sound belongs to."
+    }
+  ]
+}

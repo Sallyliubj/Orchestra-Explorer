@@ -224,8 +224,8 @@ h3 {
 }
 
 .btn {
-  background-color: #b19cd9;
-  color: white;
+  background-color: #a0522d;
+  color: #fff8dc;
   border: none;
   padding: 10px 30px;
   font-size: 18px;
@@ -235,7 +235,7 @@ h3 {
 }
 
 .btn:hover {
-  background-color: #9c82c9;
+  background-color: #e6b800;
 }
 
 .hint-container {

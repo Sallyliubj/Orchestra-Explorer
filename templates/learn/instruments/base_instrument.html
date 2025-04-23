@@ -21,6 +21,13 @@
         </ol>
     </nav>
 
+    <!-- Back to Family Button -->
+    <div class="mb-3">
+        <a href="{{ url_for('learn_family', family=family) }}" class="btn btn-outline-secondary button-color">
+            &larr; Back to {{ family|title }} Family
+        </a>
+    </div>
+
     <div class="row mt-4">
         <!-- Instrument Image and Basic Info -->
         <div class="col-md-6">
@@ -131,6 +138,10 @@
     border-color: var(--golden-yellow);
     margin-bottom: 20px;
 }
+.button-color{
+        background-color: var(--primary-brown);
+        color: var(--cream);
+    }
 </style>
 
 <script>
@@ -142,4 +153,4 @@ $(document).ready(function() {
     });
 });
 </script>
-{% endblock %} 
+{% endblock %}
