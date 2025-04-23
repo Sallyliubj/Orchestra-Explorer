@@ -3,7 +3,7 @@
 
 ### Setup
 
-1. Clone this reporistory
+1. Clone this repository
 
 ``` 
 git clone https://github.com/qrran/UI_Project.git 
