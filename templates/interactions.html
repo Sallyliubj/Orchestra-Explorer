@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}User Interaction Log{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <h1 class="mb-4">User Interaction Log</h1>
+
+  {% if interactions %}
+    <ul class="list-group">
+    {% for entry in interactions %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>{{ entry.action }}</span>
+        <span class="badge bg-secondary">{{ entry.timestamp }}</span>
+      </li>
+    {% endfor %}
+    </ul>
+  {% else %}
+    <div class="alert alert-info mt-4" role="alert">
+      No interactions logged yet.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
