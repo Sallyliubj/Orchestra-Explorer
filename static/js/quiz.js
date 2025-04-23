@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const soundBtns = document.querySelectorAll(".sound-button");
   const feedbacks = document.querySelectorAll(".feedback");
   const familyInput = document.getElementById("family-input");
-  const scoreDisplays = document.querySelectorAll("#current-score");
+  const scoreDisplays = document.querySelectorAll(".score-display span");
   const finalScore = document.getElementById("final-score");
 
   // Current state
@@ -38,6 +38,10 @@ document.addEventListener("DOMContentLoaded", function () {
     quizComplete,
     orchestraPerformance,
   ];
+
+  // Track completed connections for sound and name matching
+  const completedSoundConnections = new Set();
+  const completedNameConnections = new Set();
 
   // Handle start quiz
   if (startQuizBtn) {
@@ -109,6 +113,28 @@ document.addEventListener("DOMContentLoaded", function () {
       const currentQuestionIndex = [...questions].findIndex(
         (q) => q.style.display !== "none"
       );
+
+      // For question 5, check if an option is selected before proceeding
+      if (currentQuestionIndex === 5) {
+        const selectedOption = question5.querySelector(".option.selected");
+        if (!selectedOption) {
+          alert("Please select an answer before proceeding.");
+          return;
+        }
+      }
+
+      // For question 6, check if all connections are made
+      if (currentQuestionIndex === 6 && completedSoundConnections.size < 3) {
+        alert("Please complete all sound connections before proceeding.");
+        return;
+      }
+
+      // For question 7, check if all connections are made
+      if (currentQuestionIndex === 7 && completedNameConnections.size < 3) {
+        alert("Please connect all names to instruments before proceeding.");
+        return;
+      }
+
       showQuestion(currentQuestionIndex + 1);
     });
   });
@@ -129,6 +155,18 @@ document.addEventListener("DOMContentLoaded", function () {
       // Get data-sound attribute or assign a default sound
       const soundType = btn.getAttribute("data-sound") || "default";
       playSound(soundType);
+
+      // Highlight the button that was clicked for questions 5, 6, and 7
+      if (btn.closest("#question-5, #question-6, #question-7")) {
+        // Remove active class from all sound buttons in this container
+        const container = btn.closest(".quiz-container");
+        container.querySelectorAll(".sound-button").forEach((button) => {
+          button.classList.remove("active");
+        });
+
+        // Add active class to the clicked button
+        btn.classList.add("active");
+      }
     });
   });
 
@@ -159,8 +197,11 @@ document.addEventListener("DOMContentLoaded", function () {
   // Handle drag and drop
   initDragAndDrop();
 
-  // Handle connection lines for sound matching
+  // Handle connection lines for sound matching (Question 6)
   initSoundMatching();
+
+  // Handle name to image connections (Question 7)
+  initNameMatching();
 
   // Function to play sound (placeholder)
   function playSound(soundType) {
@@ -249,10 +290,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Initialize sound matching
+  // Initialize sound matching for Question 6
   function initSoundMatching() {
-    const soundButtons = document.querySelectorAll("[data-sound]");
-    const instrumentItems = document.querySelectorAll(".instrument-item");
+    const soundButtons = document.querySelectorAll(
+      "#question-6 .sound-button[data-sound]"
+    );
+    const instrumentItems = document.querySelectorAll(
+      "#question-6 .instrument-item"
+    );
     let selectedSound = null;
 
     if (soundButtons.length === 0 || instrumentItems.length === 0) {
@@ -271,40 +316,66 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add click events to instrument items
     instrumentItems.forEach((item) => {
       item.addEventListener("click", function () {
-        if (!selectedSound) return;
+        if (!selectedSound) {
+          alert("Please select a sound first by clicking 'Play Sound'");
+          return;
+        }
+
+        // Check if this sound-instrument pair has already been connected
+        const connectionKey = `${selectedSound}-${this.dataset.instrument}`;
+        if (completedSoundConnections.has(connectionKey)) {
+          alert("This connection has already been made!");
+          return;
+        }
 
         // Check if match is correct
         if (selectedSound === this.dataset.instrument) {
           // Draw connection line
+          const soundButton = document.querySelector(
+            `#question-6 .sound-button[data-sound="${selectedSound}"]`
+          );
+
           drawConnectionLine(
-            document.querySelector(
-              `.sound-button[data-sound="${selectedSound}"]`
-            ),
+            soundButton,
             this,
             document.getElementById("connection-lines")
           );
 
+          // Add to completed connections
+          completedSoundConnections.add(connectionKey);
+
+          // Mark as connected visually
+          soundButton.classList.add("connected");
+          this.classList.add("connected");
+
           // Reset selection
           selectedSound = null;
-          document
-            .querySelectorAll(".sound-button")
-            .forEach((b) => b.classList.remove("active"));
+          soundButtons.forEach((b) => b.classList.remove("active"));
+
+          // Check if all connections are made
+          if (completedSoundConnections.size === 3) {
+            // All connections made, enable next button
+            const nextBtn = document.querySelector(
+              "#question-6 [data-action='next']"
+            );
+            nextBtn.disabled = false;
+          }
         } else {
           // Wrong match
+          alert("That's not the correct match. Try again!");
           currentScore -= 0.5;
           updateScores();
         }
       });
     });
-
-    // Handle name-image connections
-    initNameMatching();
   }
 
-  // Initialize name matching
+  // Initialize name matching for Question 7
   function initNameMatching() {
-    const nameItems = document.querySelectorAll(".name-item");
-    const instrumentItems = document.querySelectorAll(".instrument-item");
+    const nameItems = document.querySelectorAll("#question-7 .name-item");
+    const instrumentItems = document.querySelectorAll(
+      "#question-7 .instrument-item"
+    );
     let selectedName = null;
 
     if (nameItems.length === 0 || instrumentItems.length === 0) {
@@ -323,24 +394,53 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add click events to instrument items
     instrumentItems.forEach((item) => {
       item.addEventListener("click", function () {
-        if (!selectedName) return;
+        if (!selectedName) {
+          alert("Please select an instrument name first");
+          return;
+        }
+
+        // Check if this name-instrument pair has already been connected
+        const connectionKey = `${selectedName}-${this.dataset.instrument}`;
+        if (completedNameConnections.has(connectionKey)) {
+          alert("This connection has already been made!");
+          return;
+        }
 
         // Check if match is correct
         if (selectedName === this.dataset.instrument) {
           // Draw connection line
+          const nameItem = document.querySelector(
+            `#question-7 .name-item[data-name="${selectedName}"]`
+          );
+
           drawConnectionLine(
-            document.querySelector(`.name-item[data-name="${selectedName}"]`),
+            nameItem,
             this,
             document.getElementById("name-connection-lines")
           );
 
+          // Add to completed connections
+          completedNameConnections.add(connectionKey);
+
+          // Mark as connected visually
+          nameItem.classList.add("connected");
+          this.classList.add("connected");
+
           // Reset selection
           selectedName = null;
-          document
-            .querySelectorAll(".name-item")
-            .forEach((i) => i.classList.remove("active"));
+          nameItems.forEach((i) => i.classList.remove("active"));
+
+          // Check if all connections are made
+          if (completedNameConnections.size === 3) {
+            // All connections made, enable next button
+            const nextBtn = document.querySelector(
+              "#question-7 [data-action='next']"
+            );
+            nextBtn.disabled = false;
+          }
         } else {
           // Wrong match
+          alert("That's not the correct match. Try again!");
           currentScore -= 0.5;
           updateScores();
         }
@@ -348,40 +448,90 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Function to draw connection lines
+  // Function to draw connection lines between elements
   function drawConnectionLine(from, to, container) {
     if (!from || !to || !container) return;
 
+    // Get positions of elements
     const fromRect = from.getBoundingClientRect();
     const toRect = to.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
 
+    // Create line element
     const line = document.createElement("div");
     line.classList.add("connection-line");
 
+    // Calculate positions relative to container
     const fromX = fromRect.right - containerRect.left;
     const fromY = fromRect.top + fromRect.height / 2 - containerRect.top;
     const toX = toRect.left - containerRect.left;
     const toY = toRect.top + toRect.height / 2 - containerRect.top;
 
+    // Calculate line properties
     const length = Math.sqrt(
       Math.pow(toX - fromX, 2) + Math.pow(toY - fromY, 2)
     );
     const angle = (Math.atan2(toY - fromY, toX - fromX) * 180) / Math.PI;
 
+    // Set line styles
     line.style.width = `${length}px`;
     line.style.left = `${fromX}px`;
     line.style.top = `${fromY}px`;
     line.style.transform = `rotate(${angle}deg)`;
+    line.style.transformOrigin = "0 0";
 
+    // Add line to container
     container.appendChild(line);
   }
+
+  // Display summary modal for Question 5
+  const summaryLinks = document.querySelectorAll(".summary-link");
+  summaryLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      alert(
+        "Summary: In this excerpt, the violin is providing the main melodic line. The violin's distinctive timbre and expressiveness make it well-suited for lyrical melodies in orchestral music."
+      );
+    });
+  });
 
   // Initialize the quiz
   function initQuiz() {
     showQuestion(0);
     updateScores();
+
+    // Initially disable next buttons for connection questions until all connections are made
+    const q6NextBtn = document.querySelector(
+      "#question-6 [data-action='next']"
+    );
+    const q7NextBtn = document.querySelector(
+      "#question-7 [data-action='next']"
+    );
+
+    if (q6NextBtn) q6NextBtn.disabled = false; // Will be checked on click
+    if (q7NextBtn) q7NextBtn.disabled = false; // Will be checked on click
   }
+
+  // Add specific CSS for connected elements
+  const style = document.createElement("style");
+  style.textContent = `
+    .connection-line {
+      position: absolute;
+      height: 2px;
+      background-color: #8b4513;
+      transform-origin: left center;
+    }
+    .connected {
+      opacity: 0.7;
+      border: 2px solid #8b4513;
+    }
+    .sound-button.active, .name-item.active {
+      background-color: #daa520;
+      color: #fff;
+      font-weight: bold;
+    }
+  `;
+  document.head.appendChild(style);
 
   // Start the quiz
   initQuiz();
