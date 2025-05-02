@@ -17,10 +17,14 @@
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 justify-content-center">
         <!-- Timpani -->
         <div class="col text-center">
-            <a href="{{ url_for('learn_instrument', family='percussion', instrument='timpani') }}" class="instrument-link">
+            <a href="{{ url_for('learn_instrument', family='percussion', instrument='timpani') }}" 
+               class="instrument-link {% if viewed_status.get('timpani') %}viewed{% endif %}">
                 <img src="{{ url_for('static', filename='images/percussion/timpani.png') }}" class="instrument-img" alt="Timpani">
                 <h3 class="mt-3">Timpani</h3>
                 <p class="text-muted">Large copper kettledrums with adjustable pitch</p>
+                {% if viewed_status.get('timpani') %}
+                <span class="viewed-badge"><i class="fas fa-check-circle"></i> Viewed</span>
+                {% endif %}
             </a>
             <button class="btn play-sound" data-sound="timpani">
                 <i class="fas fa-play-circle"></i> Play Sound
@@ -29,10 +33,14 @@
 
         <!-- Snare Drum -->
         <div class="col text-center">
-            <a href="{{ url_for('learn_instrument', family='percussion', instrument='snare') }}" class="instrument-link">
+            <a href="{{ url_for('learn_instrument', family='percussion', instrument='snare') }}" 
+               class="instrument-link {% if viewed_status.get('snare') %}viewed{% endif %}">
                 <img src="{{ url_for('static', filename='images/percussion/snare.png') }}" class="instrument-img" alt="Snare Drum">
                 <h3 class="mt-3">Snare Drum</h3>
-                <p class="text-muted">Sharp, crisp sound with metal snares underneath</p>
+                <p class="text-muted">Sharp, crisp sound with metal snares</p>
+                {% if viewed_status.get('snare') %}
+                <span class="viewed-badge"><i class="fas fa-check-circle"></i> Viewed</span>
+                {% endif %}
             </a>
             <button class="btn play-sound" data-sound="snare">
                 <i class="fas fa-play-circle"></i> Play Sound
@@ -41,10 +49,14 @@
 
         <!-- Bass Drum -->
         <div class="col text-center">
-            <a href="{{ url_for('learn_instrument', family='percussion', instrument='bassdrum') }}" class="instrument-link">
+            <a href="{{ url_for('learn_instrument', family='percussion', instrument='bassdrum') }}" 
+               class="instrument-link {% if viewed_status.get('bassdrum') %}viewed{% endif %}">
                 <img src="{{ url_for('static', filename='images/percussion/bassdrum.png') }}" class="instrument-img" alt="Bass Drum">
                 <h3 class="mt-3">Bass Drum</h3>
-                <p class="text-muted">Deep, resonant sound that provides the foundation</p>
+                <p class="text-muted">Deep, powerful resonant sound</p>
+                {% if viewed_status.get('bassdrum') %}
+                <span class="viewed-badge"><i class="fas fa-check-circle"></i> Viewed</span>
+                {% endif %}
             </a>
             <button class="btn play-sound" data-sound="bassdrum">
                 <i class="fas fa-play-circle"></i> Play Sound
@@ -53,10 +65,14 @@
 
         <!-- Xylophone -->
         <div class="col text-center">
-            <a href="{{ url_for('learn_instrument', family='percussion', instrument='xylophone') }}" class="instrument-link">
+            <a href="{{ url_for('learn_instrument', family='percussion', instrument='xylophone') }}" 
+               class="instrument-link {% if viewed_status.get('xylophone') %}viewed{% endif %}">
                 <img src="{{ url_for('static', filename='images/percussion/xylophone.png') }}" class="instrument-img" alt="Xylophone">
                 <h3 class="mt-3">Xylophone</h3>
-                <p class="text-muted">Wooden bars struck with mallets to produce musical notes</p>
+                <p class="text-muted">Bright, percussive pitched instrument</p>
+                {% if viewed_status.get('xylophone') %}
+                <span class="viewed-badge"><i class="fas fa-check-circle"></i> Viewed</span>
+                {% endif %}
             </a>
             <button class="btn play-sound" data-sound="xylophone">
                 <i class="fas fa-play-circle"></i> Play Sound
@@ -68,45 +84,81 @@
 
 {% block scripts %}
 <style>
-    .instrument-img {
-        height: 200px;
-        object-fit: contain;
-        transition: transform 0.3s ease;
-    }
-    .instrument-link {
-        text-decoration: none;
-        color: inherit;
-        display: block;
-    }
-    .instrument-link:hover .instrument-img {
-        transform: scale(1.05);
-    }
-    .instrument-link:hover h3 {
-        color: var(--primary-brown);
-    }
-    .play-sound {
-        margin-top: 10px;
-        color: var(--cream);
-        transition: all 0.3s ease;
-    }
-    .play-sound:hover {
-        background-color: var(--primary-brown);
-        color: white;
-    }
-    .play-sound i {
-        margin-right: 5px;
-    }
+.instrument-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    padding: 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    height: 360px;  /* Fixed height for consistent card size */
+}
+
+.instrument-link:hover {
+    text-decoration: none;
+    color: inherit;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.instrument-link.viewed {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.instrument-link.viewed img {
+    opacity: 0.7;
+}
+
+.viewed-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--primary-brown);
+    color: var(--cream);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+.viewed-badge i {
+    margin-right: 4px;
+}
+
+.instrument-img {
+    height: 220px;  /* Fixed height for images */
+    width: 220px;   /* Fixed width for images */
+    object-fit: contain;  /* Maintain aspect ratio */
+    margin: 0 auto;
+    display: block;
+    transition: opacity 0.3s ease;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+}
+
+.play-sound {
+    margin-top: 10px;  /* Push button to bottom */
+    margin-bottom: 10px;
+    background-color: var(--primary-brown);
+    color: var(--cream);
+    width: 60%;
+    align-self: center;
+}
+
+.play-sound:hover {
+    background-color: var(--secondary-brown);
+    color: var(--cream);
+}
 </style>
 
 <script>
 $(document).ready(function() {
     $('.play-sound').click(function() {
         const instrument = $(this).data('sound');
-        const audio = new Audio(`/static/sounds/${instrument}.mp3`);
-        audio.play().catch(error => {
-            console.log('Error playing sound:', error);
-            alert('Sound will be available soon!');
-        });
+        alert('Playing ' + instrument + ' sound... (Audio functionality to be implemented)');
     });
 });
 </script>
