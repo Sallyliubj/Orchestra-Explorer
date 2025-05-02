@@ -14,13 +14,17 @@
     <h1 class="text-center mb-4">Meet the String Family</h1>
     <p class="lead text-center mb-5">Click each instrument to learn more</p>
 
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 justify-content-center">
         <!-- Violin -->
         <div class="col text-center">
-            <a href="{{ url_for('learn_instrument', family='strings', instrument='violin') }}" class="instrument-link">
+            <a href="{{ url_for('learn_instrument', family='strings', instrument='violin') }}" 
+               class="instrument-link {% if viewed_status.get('violin') %}viewed{% endif %}">
                 <img src="{{ url_for('static', filename='images/strings/violin.png') }}" class="instrument-img" alt="Violin">
                 <h3 class="mt-3">Violin</h3>
-                <p class="text-muted">The smallest and highest-pitched string instrument</p>
+                <p class="text-muted">The highest-pitched string instrument</p>
+                {% if viewed_status.get('violin') %}
+                <span class="viewed-badge"><i class="fas fa-check-circle"></i> Viewed</span>
+                {% endif %}
             </a>
             <button class="btn play-sound" data-sound="violin">
                 <i class="fas fa-play-circle"></i> Play Sound
@@ -29,10 +33,14 @@
 
         <!-- Viola -->
         <div class="col text-center">
-            <a href="{{ url_for('learn_instrument', family='strings', instrument='viola') }}" class="instrument-link">
+            <a href="{{ url_for('learn_instrument', family='strings', instrument='viola') }}" 
+               class="instrument-link {% if viewed_status.get('viola') %}viewed{% endif %}">
                 <img src="{{ url_for('static', filename='images/strings/viola.png') }}" class="instrument-img" alt="Viola">
                 <h3 class="mt-3">Viola</h3>
-                <p class="text-muted">Slightly larger than a violin with a deeper sound</p>
+                <p class="text-muted">Rich, warm middle voice of the strings</p>
+                {% if viewed_status.get('viola') %}
+                <span class="viewed-badge"><i class="fas fa-check-circle"></i> Viewed</span>
+                {% endif %}
             </a>
             <button class="btn play-sound" data-sound="viola">
                 <i class="fas fa-play-circle"></i> Play Sound
@@ -41,10 +49,14 @@
 
         <!-- Cello -->
         <div class="col text-center">
-            <a href="{{ url_for('learn_instrument', family='strings', instrument='cello') }}" class="instrument-link">
+            <a href="{{ url_for('learn_instrument', family='strings', instrument='cello') }}" 
+               class="instrument-link {% if viewed_status.get('cello') %}viewed{% endif %}">
                 <img src="{{ url_for('static', filename='images/strings/cello.png') }}" class="instrument-img" alt="Cello">
                 <h3 class="mt-3">Cello</h3>
-                <p class="text-muted">A large string instrument with a rich, warm tone</p>
+                <p class="text-muted">Deep, resonant tenor voice</p>
+                {% if viewed_status.get('cello') %}
+                <span class="viewed-badge"><i class="fas fa-check-circle"></i> Viewed</span>
+                {% endif %}
             </a>
             <button class="btn play-sound" data-sound="cello">
                 <i class="fas fa-play-circle"></i> Play Sound
@@ -53,10 +65,14 @@
 
         <!-- Double Bass -->
         <div class="col text-center">
-            <a href="{{ url_for('learn_instrument', family='strings', instrument='bass') }}" class="instrument-link">
+            <a href="{{ url_for('learn_instrument', family='strings', instrument='bass') }}" 
+               class="instrument-link {% if viewed_status.get('bass') %}viewed{% endif %}">
                 <img src="{{ url_for('static', filename='images/strings/bass.png') }}" class="instrument-img" alt="Double Bass">
                 <h3 class="mt-3">Double Bass</h3>
-                <p class="text-muted">The largest and lowest-pitched string instrument</p>
+                <p class="text-muted">The largest and lowest string instrument</p>
+                {% if viewed_status.get('bass') %}
+                <span class="viewed-badge"><i class="fas fa-check-circle"></i> Viewed</span>
+                {% endif %}
             </a>
             <button class="btn play-sound" data-sound="bass">
                 <i class="fas fa-play-circle"></i> Play Sound
@@ -65,10 +81,14 @@
 
         <!-- Harp -->
         <div class="col text-center">
-            <a href="{{ url_for('learn_instrument', family='strings', instrument='harp') }}" class="instrument-link">
+            <a href="{{ url_for('learn_instrument', family='strings', instrument='harp') }}" 
+               class="instrument-link {% if viewed_status.get('harp') %}viewed{% endif %}">
                 <img src="{{ url_for('static', filename='images/strings/harp.png') }}" class="instrument-img" alt="Harp">
                 <h3 class="mt-3">Harp</h3>
-                <p class="text-muted">A beautiful plucked string instrument with ancient origins</p>
+                <p class="text-muted">Plucked string instrument with ethereal sound</p>
+                {% if viewed_status.get('harp') %}
+                <span class="viewed-badge"><i class="fas fa-check-circle"></i> Viewed</span>
+                {% endif %}
             </a>
             <button class="btn play-sound" data-sound="harp">
                 <i class="fas fa-play-circle"></i> Play Sound
@@ -80,49 +100,69 @@
 
 {% block scripts %}
 <style>
-    .instrument-img {
-        height: 200px;
-        object-fit: contain;
-        transition: transform 0.3s ease;
-    }
-    .instrument-link {
-        text-decoration: none;
-        color: inherit;
-        display: block;
-    }
-    .instrument-link:hover .instrument-img {
-        transform: scale(1.05);
-    }
-    .instrument-link:hover h3 {
-        color: var(--primary-brown);
-    }
-    .play-sound {
-        margin-top: 10px;
-        color: var(--cream);
-        transition: all 0.3s ease;
-    }
-    .play-sound:hover {
-        background-color: var(--primary-brown);
-        color: white;
-    }
-    .play-sound i {
-        margin-right: 5px;
-    }
-    .button-color {
-        background-color: var(--primary-brown);
-        color: var(--cream);
-    }
+.instrument-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    padding: 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.instrument-link:hover {
+    text-decoration: none;
+    color: inherit;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.instrument-link.viewed {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.instrument-link.viewed img {
+    opacity: 0.7;
+}
+
+.viewed-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--primary-brown);
+    color: var(--cream);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+.viewed-badge i {
+    margin-right: 4px;
+}
+
+.instrument-img {
+    max-height: 200px;
+    width: auto;
+    transition: opacity 0.3s ease;
+}
+
+.play-sound {
+    margin-top: 10px;
+    background-color: var(--primary-brown);
+    color: var(--cream);
+}
+
+.play-sound:hover {
+    background-color: var(--secondary-brown);
+    color: var(--cream);
+}
 </style>
 
 <script>
 $(document).ready(function() {
     $('.play-sound').click(function() {
         const instrument = $(this).data('sound');
-        const audio = new Audio(`/static/sounds/${instrument}.mp3`);
-        audio.play().catch(error => {
-            console.log('Error playing sound:', error);
-            alert('Sound will be available soon!');
-        });
+        alert('Playing ' + instrument + ' sound... (Audio functionality to be implemented)');
     });
 });
 </script>
