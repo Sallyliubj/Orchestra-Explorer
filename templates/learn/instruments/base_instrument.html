@@ -21,11 +21,27 @@
         </ol>
     </nav>
 
-    <!-- Back to Family Button -->
-    <div class="mb-3">
-        <a href="{{ url_for('learn_family', family=family) }}" class="btn btn-outline-secondary button-color">
-            &larr; Back to {{ family|title }} Family
+    <!-- Navigation Buttons -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            {% if prev_instrument %}
+            <a href="{{ url_for('learn_instrument', family=family, instrument=prev_instrument) }}" class="btn nav-btn">
+                <i class="fas fa-chevron-left"></i> Previous: {{ prev_instrument|replace('_', ' ')|title }}
+            </a>
+            {% endif %}
+        </div>
+
+        <a href="{{ url_for('learn_family', family=family) }}" class="btn back-btn">
+            <i class="fas fa-th-large me-1"></i> Back to {{ family|title }} Family
         </a>
+
+        <div>
+            {% if next_instrument %}
+            <a href="{{ url_for('learn_instrument', family=family, instrument=next_instrument) }}" class="btn nav-btn">
+                Next: {{ next_instrument|replace('_', ' ')|title }} <i class="fas fa-chevron-right"></i>
+            </a>
+            {% endif %}
+        </div>
     </div>
 
     <div class="row mt-4">
@@ -138,10 +154,53 @@
     border-color: var(--golden-yellow);
     margin-bottom: 20px;
 }
-.button-color{
-        background-color: var(--primary-brown);
-        color: var(--cream);
+
+.nav-btn {
+    background-color: var(--primary-brown);
+    color: var(--cream);
+    border: 1px solid var(--primary-brown);
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+    margin: 0 5px;
+}
+
+.nav-btn:hover {
+    background-color: var(--cream);
+    color: var(--primary-brown);
+    border-color: var(--primary-brown);
+    text-decoration: none;
+}
+
+.back-btn {
+    background-color: var(--cream);
+    color: var(--primary-brown);
+    border: 2px solid var(--primary-brown);
+    transition: all 0.3s ease;
+    padding: 8px 20px;
+    font-weight: 500;
+}
+
+.back-btn:hover {
+    background-color: var(--golden-yellow);
+    color: var(--primary-brown);
+    border-color: var(--primary-brown);
+    text-decoration: none;
+}
+
+.nav-buttons {
+    min-width: 180px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .nav-buttons {
+        min-width: auto;
     }
+    .nav-btn, .back-btn {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+}
 </style>
 
 <script>
