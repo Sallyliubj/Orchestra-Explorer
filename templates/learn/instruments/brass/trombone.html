@@ -3,30 +3,35 @@
 {% set family = 'brass' %}
 {% set instrument_id = 'trombone' %}
 {% set instrument_name = 'trombone' %}
-{% set description = 'The trombone is a brass instrument known for its distinctive slide mechanism, which allows players to change pitch smoothly. It has a powerful, brassy tone and a wide range, making it a versatile voice in orchestras, bands, and jazz ensembles.' %}
+{% set video_url = 'https://www.youtube.com/embed/3ahWiS--CUU' %}
+{% set description = 'The trombone is a powerful brass instrument known for its distinctive slide mechanism and rich, noble sound. It can produce both powerful fortissimos and gentle, lyrical passages.' %}
 
 {% set features = [
-    'Uses a slide instead of valves to change pitch',
-    'Most common type is the tenor trombone, pitched in B♭',
-    'Has a large, flared bell and a cup-shaped mouthpiece',
-    'Can produce glissandos (sliding notes) unique to the trombone',
-    'Trombone sections typically include tenor and bass trombones'
+    'Uses a telescoping slide instead of valves to change pitch',
+    'Made of about 9 feet of brass tubing',
+    'Seven slide positions for different notes',
+    'Range spans about two and a half octaves',
+    'Available in different sizes (tenor, bass, alto)'
 ] %}
 
-{% set technique = 'To play the trombone, the musician buzzes their lips into a mouthpiece while extending and contracting a telescoping slide to change the length of the instrument’s tubing. Accurate slide positioning and breath control are essential for good intonation and tone.' %}
+{% set technique = 'The trombone is played by buzzing the lips into the mouthpiece while moving a slide to change pitch. The player must develop accurate muscle memory for slide positions and good breath control. Various articulations and mute effects are possible.' %}
 
-{% set role = 'In orchestras and concert bands, trombones often provide harmonic support, powerful accents, and dramatic swells. In jazz bands, trombones take on both ensemble and solo roles, contributing to the genre’s signature sound. Trombones are also prominent in brass ensembles and film scores.' %}
+{% set role = 'The trombone adds power and majesty to the brass section. It can provide both melodic lines and harmonic support, and is often featured in dramatic orchestral passages. In jazz, it is known for its ability to create expressive glissandos and unique effects.' %}
 
 {% set famous_pieces = [
-    {'title': 'Trombone Concerto', 'composer': 'Launy Grøndahl'},
-    {'title': 'Concertino for Trombone and Orchestra', 'composer': 'Ferdinand David'},
-    {'title': 'Trombone Concerto', 'composer': 'Henri Tomasi'},
-    {'title': 'Blue Bells of Scotland', 'composer': 'Arthur Pryor'}
+    {'title': 'Trombone Concerto', 'composer': 'Nikolai Rimsky-Korsakov'},
+    {'title': 'Bolero (Trombone Solo)', 'composer': 'Maurice Ravel'},
+    {'title': 'Symphony No. 3 (Organ Symphony)', 'composer': 'Camille Saint-Saëns'},
+    {'title': 'Ride of the Valkyries', 'composer': 'Richard Wagner'}
 ] %}
 
 {% set fun_facts = [
-    'The word "trombone" comes from the Italian for "large trumpet."',
-    'Trombones have been used since the Renaissance and were originally called sackbuts.',
-    'It’s one of the few instruments that can perform a true glissando.',
-    'Bass trombones have a larger bore and extra valves to reach lower notes.'
+    'The trombone is one of the few instruments that hasn\'t changed much since the Renaissance',
+    'The word "trombone" means "large trumpet" in Italian',
+    'It is the only orchestral instrument that can produce a true glissando',
+    'The slide has seven different positions, each a half-step apart'
 ] %}
+
+{% block content %}
+{{ super() }}
+{% endblock %}

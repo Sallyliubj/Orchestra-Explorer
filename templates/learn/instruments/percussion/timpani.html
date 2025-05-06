@@ -3,7 +3,8 @@
 {% set family = 'percussion' %}
 {% set instrument_id = 'timpani' %}
 {% set instrument_name = 'timpani' %}
-{% set description = 'Timpani, also known as kettle drums, are large tunable drums that produce specific pitches. Played with mallets, they are essential in orchestras for rhythm, harmony, and dramatic impact.' %}
+{% set video_url = 'https://www.youtube.com/embed/PRTxPJfCKhY' %}
+{% set description = 'Timpani, also known as kettledrums, are large copper bowls with adjustable pitch. They are the most important pitched percussion instruments in the orchestra, providing both rhythmic and harmonic foundation.' %}
 
 {% set features = [
     'Bowl-shaped drums made of copper or fiberglass',
@@ -30,3 +31,7 @@
     'Timpani are one of the few percussion instruments capable of playing tuned melodies.',
     'They date back to the 15th century and were originally used in military and ceremonial settings.'
 ] %}
+
+{% block content %}
+{{ super() }}
+{% endblock %}
