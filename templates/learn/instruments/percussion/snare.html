@@ -3,30 +3,35 @@
 {% set family = 'percussion' %}
 {% set instrument_id = 'snare' %}
 {% set instrument_name = 'snare drum' %}
-{% set description = 'The snare drum is a central percussion instrument known for its crisp, sharp sound produced by metal wires (snares) stretched across the bottom head. It plays a key role in rhythm and is used in a wide range of musical styles.' %}
+{% set video_url = 'https://www.youtube.com/embed/XTC68YRgUQ4' %}
+{% set description = 'The snare drum is a versatile percussion instrument characterized by its crisp, sharp sound. The distinctive rattle of its metal snares gives it a unique voice in both orchestral and military music.' %}
 
 {% set features = [
-    'Shallow cylindrical drum with snares on the bottom head',
-    'Produces a bright, cutting sound with a sharp attack',
-    'Can be played with sticks, brushes, or mallets',
-    'Often mounted on a stand or held with a harness in marching bands',
-    'Includes a tension mechanism to tighten or loosen the snares for different effects'
+    'Double-headed drum with metal snares across bottom head',
+    'Typically 14 inches in diameter and 5-6 inches deep',
+    'Played with wooden or plastic drumsticks',
+    'Snares can be engaged or released with a lever',
+    'Wide range of playing techniques and effects'
 ] %}
 
-{% set technique = 'The snare drum is played by striking the top drumhead with sticks, using a variety of strokes including single hits, rolls, flams, and rimshots. The tension of the snares and head can be adjusted to change tone, and damping techniques are used to control resonance.' %}
+{% set technique = 'The snare drum is played with drumsticks, brushes, or mallets. Various techniques include single strokes, rolls, rim shots, and brush sweeps. The player can adjust the snare tension and striking position to create different tones.' %}
 
-{% set role = 'In concert bands, orchestras, and drumlines, the snare drum provides rhythmic precision, dramatic accents, and military-style rolls. In drum kits used for jazz, rock, and pop, it anchors the backbeat and plays a vital role in groove and timekeeping.' %}
+{% set role = 'The snare drum is essential in orchestral music for its military associations and dramatic effects. It provides rhythmic drive and can create both delicate and powerful sounds. In marching bands, it often leads the percussion section.' %}
 
 {% set famous_pieces = [
-    {'title': 'Boléro', 'composer': 'Maurice Ravel'},
-    {'title': 'Lieutenant Kijé Suite', 'composer': 'Sergei Prokofiev'},
-    {'title': 'The Stars and Stripes Forever', 'composer': 'John Philip Sousa'},
-    {'title': 'Shepherd’s Hey', 'composer': 'Percy Grainger'}
+    {'title': 'Bolero', 'composer': 'Maurice Ravel'},
+    {'title': 'Symphony No. 5', 'composer': 'Carl Nielsen'},
+    {'title': 'Lieutenant Kije Suite', 'composer': 'Sergei Prokofiev'},
+    {'title': 'William Tell Overture', 'composer': 'Gioachino Rossini'}
 ] %}
 
 {% set fun_facts = [
-    'The snare drum’s distinctive rattle comes from the metal wires stretched across the bottom head.',
-    'It evolved from the medieval tabor and became central in military and marching music.',
-    'Snare drummers use special rudiments—standardized stick patterns—for training and performance.',
-    'In a standard drum kit, the snare is typically placed between the drummer’s legs for easy access.'
+    'The snare drum evolved from medieval tabors',
+    'Military drummers used specific drum patterns to signal different commands',
+    'The term "snare" refers to the metal wires stretched across the bottom head',
+    'Modern snare drums can be made from various materials including wood, metal, and acrylic'
 ] %}
+
+{% block content %}
+{{ super() }}
+{% endblock %}

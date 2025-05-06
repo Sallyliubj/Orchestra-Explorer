@@ -3,30 +3,35 @@
 {% set family = 'percussion' %}
 {% set instrument_id = 'bassdrum' %}
 {% set instrument_name = 'bass drum' %}
-{% set description = 'The bass drum is a large, low-pitched percussion instrument that provides deep, resonant sounds. It plays a powerful rhythmic role in orchestras, marching bands, and drum kits, delivering impact and emphasizing dramatic moments.' %}
+{% set video_url = 'https://www.youtube.com/embed/dN_EzmXbsu8' %}
+{% set description = 'The bass drum is a large percussion instrument that produces deep, powerful sounds. Its resonant boom adds weight and drama to orchestral music and provides crucial rhythmic foundation.' %}
 
 {% set features = [
-    'Large cylindrical drum with heads on both sides',
-    'Produces deep, booming tones with strong resonance',
-    'Played with a large, soft mallet or pedal beater',
-    'Mounted vertically in orchestras or horizontally in drum kits',
-    'Often dampened with cloth or hands to control sustain and tone'
+    'Large cylindrical drum with two heads',
+    'Played with a large, soft-headed mallet',
+    'Can be played with varying dynamics from pp to fff',
+    'Diameter typically ranges from 28 to 40 inches',
+    'Produces deep, resonant tones with long sustain'
 ] %}
 
-{% set technique = 'The bass drum is typically struck with a soft mallet or foot pedal (in drum kits) to produce a low, powerful sound. Orchestral players use varying strokes, damping techniques, and placement to achieve dynamic effects, from subtle thuds to explosive booms.' %}
+{% set technique = 'The bass drum is played with a large mallet, striking either head to produce different sounds. The player can control dynamics and tone through striking position, mallet choice, and playing technique. Damping techniques help control the length of sustain.' %}
 
-{% set role = 'In orchestras and concert bands, the bass drum emphasizes rhythm and dramatic climaxes. In marching bands, it keeps time with strong, consistent beats. In drum kits for rock, pop, and jazz, the bass drum anchors the groove and is operated by a foot pedal.' %}
+{% set role = 'The bass drum provides powerful accents and rhythmic foundation in orchestral music. It is often used for dramatic effects, climactic moments, and to reinforce the music\'s pulse. In marching bands, it maintains steady tempo and adds emphasis to key moments.' %}
 
 {% set famous_pieces = [
-    {'title': 'The Rite of Spring', 'composer': 'Igor Stravinsky'},
-    {'title': 'Symphony No. 9', 'composer': 'Ludwig van Beethoven'},
-    {'title': 'The Planets: Jupiter', 'composer': 'Gustav Holst'},
-    {'title': 'Also sprach Zarathustra', 'composer': 'Richard Strauss'}
+    {'title': 'Symphony No. 3 (Organ Symphony)', 'composer': 'Camille Saint-Saëns'},
+    {'title': '1812 Overture', 'composer': 'Pyotr Tchaikovsky'},
+    {'title': 'The Great Gate of Kiev', 'composer': 'Modest Mussorgsky'},
+    {'title': 'Mars from The Planets', 'composer': 'Gustav Holst'}
 ] %}
 
 {% set fun_facts = [
-    'The bass drum is the largest drum in the percussion family.',
-    'In a drum kit, it’s operated by a foot pedal and plays a key role in the backbeat.',
-    'Bass drums can vary greatly in size depending on their use—concert, marching, or drum set.',
-    'It’s one of the most physically felt instruments in a live performance due to its low frequency.'
+    'The bass drum has been used in military and ceremonial music for centuries',
+    'Some modern bass drums can be as large as 40 inches in diameter',
+    'The term "bass drum" comes from the deep, bass frequencies it produces',
+    'In orchestral music, it often represents thunder, explosions, or dramatic moments'
 ] %}
+
+{% block content %}
+{{ super() }}
+{% endblock %}

@@ -3,30 +3,35 @@
 {% set family = 'brass' %}
 {% set instrument_id = 'tuba' %}
 {% set instrument_name = 'tuba' %}
-{% set description = 'The tuba is the largest and lowest-pitched brass instrument, providing the foundation for the brass section. It produces deep, resonant tones and plays a crucial role in supporting harmony and rhythm in orchestras, bands, and ensembles.' %}
+{% set video_url = 'https://www.youtube.com/embed/OTWpW5pz_mU' %}
+{% set description = 'The tuba is the largest and lowest-pitched brass instrument. Its deep, rich sound provides the foundation for brass and wind ensembles, adding depth and power to the orchestra.' %}
 
 {% set features = [
-    'Largest and heaviest member of the brass family',
-    'Typically pitched in F, E♭, C, or B♭',
-    'Played with a large, cup-shaped mouthpiece',
-    'Uses valves to change pitch, usually 3 to 6 valves',
-    'Produces rich, deep sounds with strong resonance'
+    'Largest member of the brass family',
+    'Uses 3-6 valves depending on the model',
+    'Made of 16-18 feet of tubing',
+    'Range spans about four octaves',
+    'Available in different keys, with B♭ and C being most common'
 ] %}
 
-{% set technique = 'The tuba is played while sitting or standing, held upright with the bell facing upward. The player buzzes their lips into a large mouthpiece to produce sound, using the fingers to operate the valves and change notes. Good breath control and strong abdominal muscles are essential for playing the tuba, especially for producing its lowest notes.' %}
+{% set technique = 'The tuba is played by buzzing the lips into a large mouthpiece while pressing valves to change pitch. Due to its size, it requires significant breath support and careful control of air flow. Players must develop strong embouchure strength for the low register.' %}
 
-{% set role = 'In orchestral and band music, the tuba provides the bass foundation, supporting the harmony and driving the rhythm. It often doubles the bass line with other low instruments but also features in solo passages and unique color effects in both classical and contemporary music.' %}
+{% set role = 'The tuba provides the bass foundation for brass and wind ensembles. In orchestras, it reinforces bass lines and adds depth to powerful passages. It can also serve as a solo instrument, demonstrating surprising agility despite its size.' %}
 
 {% set famous_pieces = [
     {'title': 'Tuba Concerto', 'composer': 'Ralph Vaughan Williams'},
-    {'title': 'Concerto for Bass Tuba', 'composer': 'Edward Gregson'},
-    {'title': 'Tuba Mirum from Requiem', 'composer': 'Wolfgang Amadeus Mozart'},
-    {'title': 'The Grumpy Troll', 'composer': 'James Grant'}
+    {'title': 'Bydlo from Pictures at an Exhibition', 'composer': 'Modest Mussorgsky'},
+    {'title': 'Symphony No. 6 (Pastoral)', 'composer': 'Ludwig van Beethoven'},
+    {'title': 'Ein Heldenleben', 'composer': 'Richard Strauss'}
 ] %}
 
 {% set fun_facts = [
-    'The tuba was invented in the 1830s and quickly became the standard bass instrument in brass sections.',
-    'It is sometimes called the "grandfather of the brass family" due to its size and deep sound.',
-    'Tubas come in different shapes and sizes, including sousaphones for marching bands.',
-    'Despite its large size, the tuba can play surprisingly agile and melodic passages.'
+    'The tuba is the youngest member of the modern orchestra, invented in 1835',
+    'If uncoiled, a tuba\'s tubing would be about twice as long as a trumpet\'s',
+    'The word "tuba" comes from the Latin word for "trumpet" or "horn"',
+    'Some tubas can play notes so low they are felt more than heard'
 ] %}
+
+{% block content %}
+{{ super() }}
+{% endblock %}

@@ -10,6 +10,7 @@
 {% set role = role|default('') %}
 {% set famous_pieces = famous_pieces|default([]) %}
 {% set fun_facts = fun_facts|default([]) %}
+{% set video_url = video_url|default('') %}
 
 {% block content %}
 <div class="container py-5">
@@ -56,6 +57,24 @@
                     <button class="btn btn-primary btn-lg play-sound" data-sound="{{ instrument_id }}">
                         <i class="fas fa-play me-2"></i>Listen to the Sound
                     </button>
+                </div>
+            </div>
+
+            <!-- Video Section -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h3 class="h5 text-primary mb-3">Watch and Learn</h3>
+                    <div class="video-container">
+                        <iframe 
+                            width="100%" 
+                            height="315" 
+                            src="{{ video_url }}" 
+                            title="{{ instrument_name|title }} Demonstration"
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
                 </div>
             </div>
         </div>
@@ -200,6 +219,21 @@
         padding: 6px 12px;
         font-size: 0.9rem;
     }
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 </style>
 

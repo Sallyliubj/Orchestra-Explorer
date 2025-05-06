@@ -3,30 +3,35 @@
 {% set family = 'brass' %}
 {% set instrument_id = 'trumpet' %}
 {% set instrument_name = 'trumpet' %}
-{% set description = 'The trumpet is a high-pitched brass instrument known for its bright, piercing tone and agility. It is one of the oldest musical instruments, used in everything from classical and jazz to military and popular music.' %}
+{% set video_url = 'https://www.youtube.com/embed/kozLzgjp5TI' %}
+{% set description = 'The trumpet is a brilliant and powerful brass instrument with a bright, penetrating tone. It is often featured as a solo instrument and leads the brass section in orchestral music.' %}
 
 {% set features = [
-    'Smallest and highest-pitched standard brass instrument',
+    'Made of about 6.5 feet of brass tubing',
+    'Three piston valves control pitch',
+    'Range spans about three octaves',
     'Typically pitched in B♭',
-    'Uses three valves to change pitch',
-    'Played with a small, cup-shaped mouthpiece',
-    'Has a strong, brilliant tone that cuts through ensembles'
+    'Various mutes can be used to alter the sound'
 ] %}
 
-{% set technique = 'The trumpet is played by buzzing the lips into a small mouthpiece while using the fingers to press down valves that change the length of the tubing. Breath control, lip tension, and precise valve combinations are essential for hitting the right pitches and playing cleanly.' %}
+{% set technique = 'The trumpet is played by buzzing the lips into a cup-shaped mouthpiece while pressing valves to change pitch. Players must develop strong embouchure control and breath support. Different articulations and muting techniques create varied effects.' %}
 
-{% set role = 'In orchestras and bands, trumpets often carry melodies, fanfares, and accents due to their clear, bold sound. In jazz, the trumpet is a prominent solo instrument known for its expressive range. Trumpets are also key in ceremonial and military music.' %}
+{% set role = 'The trumpet often leads the brass section and frequently plays melodic lines. It can provide dramatic fanfares, lyrical solos, and powerful orchestral passages. In jazz, it has been a leading voice since the genre\'s early days.' %}
 
 {% set famous_pieces = [
-    {'title': 'Trumpet Concerto in E-flat Major', 'composer': 'Joseph Haydn'},
-    {'title': 'Trumpet Concerto in E-flat', 'composer': 'Johann Nepomuk Hummel'},
-    {'title': 'Trumpet Voluntary', 'composer': 'Jeremiah Clarke'},
-    {'title': 'Concerto for Trumpet', 'composer': 'Alexander Arutiunian'}
+    {'title': 'Trumpet Concerto in E-flat major', 'composer': 'Joseph Haydn'},
+    {'title': 'Brandenburg Concerto No. 2', 'composer': 'J.S. Bach'},
+    {'title': 'Pictures at an Exhibition (Promenade)', 'composer': 'Modest Mussorgsky'},
+    {'title': 'Aida (Triumphal March)', 'composer': 'Giuseppe Verdi'}
 ] %}
 
 {% set fun_facts = [
-    'The trumpet has been around in various forms since ancient civilizations, including Egypt and Rome.',
-    'Jazz legends like Louis Armstrong and Miles Davis helped revolutionize trumpet playing.',
-    'The trumpet is known for its wide range—from mellow tones to bold, heroic blasts.',
-    'Trumpeters often switch between different types (e.g., B♭, C, piccolo trumpet) depending on the repertoire.'
+    'The trumpet is one of the oldest musical instruments, dating back to at least 1500 BCE',
+    'Early trumpets had no valves and could only play notes in the natural harmonic series',
+    'The modern trumpet\'s three-valve system was developed in the 1820s',
+    'Trumpet players can use various mutes to create different tonal effects'
 ] %}
+
+{% block content %}
+{{ super() }}
+{% endblock %}

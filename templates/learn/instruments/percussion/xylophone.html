@@ -3,7 +3,8 @@
 {% set family = 'percussion' %}
 {% set instrument_id = 'xylophone' %}
 {% set instrument_name = 'xylophone' %}
-{% set description = 'The xylophone is a pitched percussion instrument made of wooden bars arranged like a piano keyboard. It produces a bright, percussive tone when the bars are struck with mallets and is used in orchestras, bands, and solo performances.' %}
+{% set video_url = 'https://www.youtube.com/embed/ix-QW-BShPY' %}
+{% set description = 'The xylophone is a pitched percussion instrument consisting of wooden bars struck with mallets. Its bright, penetrating sound and quick articulation make it perfect for rapid passages and melodic lines.' %}
 
 {% set features = [
     'Made of tuned wooden bars, usually rosewood or synthetic materials',
@@ -30,3 +31,7 @@
     'It’s one of the most common percussion instruments used in early music education.',
     'The xylophone’s origins trace back to Africa and Asia, with traditional forms still played today.'
 ] %}
+
+{% block content %}
+{{ super() }}
+{% endblock %}
