@@ -19,27 +19,35 @@
                 </div>
             </div>
 
-            <!-- Take Quiz Button (Locked) -->
-            <div class="home-card card mb-4 locked-feature">
+            <!-- Take Quiz Button -->
+            <div class="home-card card mb-4 {% if not learning_completed %}locked-feature{% endif %}">
                 <div class="card-body text-center py-4">
                     <i class="fas fa-question-circle feature-icon"></i>
                     <h3 class="card-title">Take the Quiz</h3>
                     <p class="card-text">Test your knowledge about orchestra instruments.</p>
-                    <button class="btn btn-lg locked-button" disabled>
-                        <i class="fas fa-lock me-2"></i>Complete Learning First
-                    </button>
+                    {% if learning_completed %}
+                        <a href="{{ url_for('quiz') }}" class="btn btn-primary btn-lg">Start Quiz</a>
+                    {% else %}
+                        <button class="btn btn-lg locked-button" disabled>
+                            <i class="fas fa-lock me-2"></i>Complete Learning First
+                        </button>
+                    {% endif %}
                 </div>
             </div>
 
-            <!-- Orchestra Performance Button (Locked) -->
-            <div class="home-card card mb-4 locked-feature">
+            <!-- Orchestra Performance Button -->
+            <div class="home-card card mb-4 {% if not quiz_completed %}locked-feature{% endif %}">
                 <div class="card-body text-center py-4">
                     <i class="fas fa-theater-masks feature-icon"></i>
                     <h3 class="card-title">See Orchestra Performance</h3>
                     <p class="card-text">Experience a virtual orchestra performance.</p>
-                    <button class="btn btn-lg locked-button" disabled>
-                        <i class="fas fa-lock me-2"></i>Complete All Quizzes
-                    </button>
+                    {% if quiz_completed %}
+                        <a href="{{ url_for('quiz', quiz_id=8) }}" class="btn btn-primary btn-lg">Watch Performance</a>
+                    {% else %}
+                        <button class="btn btn-lg locked-button" disabled>
+                            <i class="fas fa-lock me-2"></i>Complete Quiz First
+                        </button>
+                    {% endif %}
                 </div>
             </div>
         </div>
