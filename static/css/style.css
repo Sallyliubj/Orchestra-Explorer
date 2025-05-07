@@ -160,6 +160,24 @@ h3 {
   text-align: center;
 }
 
+/* Special styles for quiz start page */
+#quiz-start {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70vh; /* Set height to center vertically */
+}
+
+#quiz-start .diagram-image {
+  display: none; /* Hide the diagram image */
+}
+
+#quiz-start h1 {
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+}
+
 .score-display {
   font-size: 20px;
   margin-bottom: 20px;
@@ -286,11 +304,11 @@ h3 {
   font-size: 18px;
   cursor: pointer;
   border-radius: 5px;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+  margin: 20px auto;
+  display: block;
+  width: auto; /* Change from 100% to auto */
+  min-width: 200px;
+  max-width: 300px;
   height: 60px;
   transition: background-color 0.3s ease;
   box-sizing: border-box;
