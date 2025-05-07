@@ -7,25 +7,18 @@
     <p>You have demonstrated your knowledge of orchestral instruments!</p>
     <div class="signature">The Orchestra Explorer Team</div>
   </div>
+
+<!-- Orchestra Performance -->
+<div id="orchestra-performance" class="quiz-container">
+  <div class="video-container">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/n3EiRynr1Us?si=j2FGgSBTlC3CJLjm" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+</div>
+
   <div class="controls">
     <button class="btn" onclick="window.location.href='/quiz'">
       Take Quiz Again
     </button>
     <button class="btn" onclick="window.location.href='/'">Return Home</button>
   </div>
-</div>
-
-<!-- Orchestra Performance -->
-<div id="orchestra-performance" class="quiz-container" style="display: none">
-  <h1>See how different instruments come together to create harmony</h1>
-
-  <div class="video-container">
-    <img
-      src="{{ url_for('static', filename='images/orchestra_performance.jpg') }}"
-      alt="Orchestra Performance"
-      class="performance-image"
-    />
-  </div>
-
-  <h2>Beethoven: Symphony No. 5, First movement</h2>
 </div>
