@@ -11,6 +11,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const question7 = document.getElementById("question-7");
   const quizComplete = document.getElementById("quiz-complete");
 
+  // Get current question ID from URL
+  const pathParts = window.location.pathname.split("/");
+  const currentQuizId = parseInt(pathParts[pathParts.length - 1]) || 0;
+
   // Current score (stored in localStorage)
   let currentScore = localStorage.getItem("quizScore")
     ? parseFloat(localStorage.getItem("quizScore"))
@@ -34,6 +38,10 @@ document.addEventListener("DOMContentLoaded", function () {
     startQuizBtn.addEventListener("click", () => {
       // Initialize score when starting the quiz
       localStorage.setItem("quizScore", "10");
+      // Clear previous quiz progress
+      for (let i = 1; i <= 7; i++) {
+        localStorage.removeItem(`quiz_${i}_state`);
+      }
       window.location.href = "/quiz/1";
     });
   }
@@ -51,6 +59,9 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+
+  // Restore state for the current question
+  restoreQuizState(currentQuizId);
 
   // Handle options click for multiple choice questions
   const options = document.querySelectorAll(".option");
@@ -93,6 +104,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if (successFeedback) successFeedback.style.display = "block";
         if (checkbox) checkbox.innerHTML = "✓";
       }
+
+      // Save the state of the current question
+      saveQuizState(currentQuizId);
     });
   });
 
@@ -100,10 +114,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const nextBtns = document.querySelectorAll('[data-action="next"]');
   nextBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
-      // Get current quiz ID from URL
-      const pathParts = window.location.pathname.split("/");
-      const currentQuizId = parseInt(pathParts[pathParts.length - 1]);
-
       // Validate answers before proceeding
       if (!validateCurrentQuestion(currentQuizId)) {
         return;
@@ -121,9 +131,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const prevBtns = document.querySelectorAll('[data-action="previous"]');
   prevBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
-      // Get current quiz ID from URL
-      const pathParts = window.location.pathname.split("/");
-      const currentQuizId = parseInt(pathParts[pathParts.length - 1]);
+      // Save state before navigating away
+      saveQuizState(currentQuizId);
 
       // Navigate to previous question
       if (currentQuizId > 1) {
@@ -187,6 +196,9 @@ document.addEventListener("DOMContentLoaded", function () {
           updateScores();
           familyInput.dataset.correct = "false";
         }
+
+        // Save the state
+        saveQuizState(currentQuizId);
       };
 
       // Check answer on button click
@@ -196,6 +208,9 @@ document.addEventListener("DOMContentLoaded", function () {
       familyInput.addEventListener("keyup", (e) => {
         if (e.key === "Enter") {
           checkAnswer();
+        } else {
+          // Save input as user types
+          saveQuizState(currentQuizId);
         }
       });
     }
@@ -207,13 +222,184 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Initialize sound matching if present on page
-  if (document.querySelector(".sound-source")) {
+  if (document.querySelector(".sound-button[data-sound]")) {
     initSoundMatching();
   }
 
   // Initialize name matching if present on page
-  if (document.querySelector(".name-tag")) {
+  if (document.querySelector(".name-item")) {
     initNameMatching();
+  }
+
+  // Function to save quiz state to localStorage
+  function saveQuizState(questionId) {
+    // Only save if we have a valid question ID
+    if (!questionId || questionId < 1 || questionId > 7) return;
+
+    let state = {};
+
+    switch (questionId) {
+      case 1:
+      case 2:
+      case 5:
+        // Multiple choice questions
+        const selectedOption = document.querySelector(
+          `#question-${questionId} .option.selected`
+        );
+        if (selectedOption) {
+          state.selectedValue = selectedOption.getAttribute("data-value");
+        }
+        break;
+
+      case 3:
+        // Drag and drop question
+        const dropZones = document.querySelectorAll(".drop-zone");
+        state.dropZones = {};
+
+        dropZones.forEach((zone) => {
+          const category = zone.getAttribute("data-category");
+          const items = zone.querySelectorAll(".draggable");
+          state.dropZones[category] = Array.from(items).map((item) =>
+            item.getAttribute("data-category")
+          );
+        });
+        break;
+
+      case 4:
+        // Text input question
+        const textInput = document.getElementById("family-input");
+        if (textInput) {
+          state.inputValue = textInput.value;
+          if (textInput.hasAttribute("data-correct")) {
+            state.inputCorrect = textInput.getAttribute("data-correct");
+          }
+        }
+        break;
+
+      case 6:
+        // Sound matching
+        state.soundConnections = [];
+        document
+          .querySelectorAll("#question-6 .sound-button.connected")
+          .forEach((btn) => {
+            if (btn.getAttribute("data-sound")) {
+              state.soundConnections.push(btn.getAttribute("data-sound"));
+            }
+          });
+        break;
+
+      case 7:
+        // Name matching
+        state.nameConnections = [];
+        document
+          .querySelectorAll("#question-7 .name-item.connected")
+          .forEach((item) => {
+            if (item.getAttribute("data-name")) {
+              state.nameConnections.push(item.getAttribute("data-name"));
+            }
+          });
+        break;
+    }
+
+    // Include feedback visibility state
+    const errorFeedback = document.querySelector(`#feedback-${questionId}`);
+    const successFeedback = document.querySelector(`#success-${questionId}`);
+
+    if (errorFeedback) {
+      state.errorFeedbackVisible = errorFeedback.style.display === "block";
+    }
+
+    if (successFeedback) {
+      state.successFeedbackVisible = successFeedback.style.display === "block";
+    }
+
+    // Save state
+    localStorage.setItem(`quiz_${questionId}_state`, JSON.stringify(state));
+  }
+
+  // Function to restore quiz state from localStorage
+  function restoreQuizState(questionId) {
+    // Only restore if we have a valid question ID
+    if (!questionId || questionId < 1 || questionId > 7) return;
+
+    const savedState = localStorage.getItem(`quiz_${questionId}_state`);
+    if (!savedState) return;
+
+    try {
+      const state = JSON.parse(savedState);
+
+      switch (questionId) {
+        case 1:
+        case 2:
+        case 5:
+          // Multiple choice questions
+          if (state.selectedValue) {
+            const option = document.querySelector(
+              `#question-${questionId} .option[data-value="${state.selectedValue}"]`
+            );
+            if (option) {
+              option.click(); // Simulate click to trigger the selection logic
+            }
+          }
+          break;
+
+        case 3:
+          // Drag and drop question - will be handled by initDragAndDrop
+          // We store the state for restoration after the drag and drop is initialized
+          window.savedDragDropState = state;
+          break;
+
+        case 4:
+          // Text input question
+          const textInput = document.getElementById("family-input");
+          if (textInput && state.inputValue) {
+            textInput.value = state.inputValue;
+
+            if (state.inputCorrect) {
+              textInput.dataset.correct = state.inputCorrect;
+
+              // Show appropriate feedback
+              const errorFeedback = document.getElementById("feedback-4");
+              const successFeedback = document.getElementById("success-4");
+
+              if (errorFeedback) errorFeedback.style.display = "none";
+              if (successFeedback) successFeedback.style.display = "none";
+
+              if (state.inputCorrect === "true" && successFeedback) {
+                successFeedback.style.display = "block";
+              } else if (state.inputCorrect === "false" && errorFeedback) {
+                errorFeedback.style.display = "block";
+              }
+            }
+          }
+          break;
+
+        case 6:
+        case 7:
+          // Connection questions (sound/name matching)
+          // We store the state for restoration after initialization
+          window.savedConnectionState = state;
+          break;
+      }
+
+      // Restore feedback visibility if not handled by other logic
+      if (state.errorFeedbackVisible || state.successFeedbackVisible) {
+        const errorFeedback = document.querySelector(`#feedback-${questionId}`);
+        const successFeedback = document.querySelector(
+          `#success-${questionId}`
+        );
+
+        if (errorFeedback && state.errorFeedbackVisible) {
+          errorFeedback.style.display = "block";
+        }
+
+        if (successFeedback && state.successFeedbackVisible) {
+          successFeedback.style.display = "block";
+        }
+      }
+    } catch (e) {
+      console.error("Error restoring quiz state:", e);
+    }
   }
 
   // Function to validate current question
@@ -277,6 +463,8 @@ document.addEventListener("DOMContentLoaded", function () {
             // Correct answer
             if (successFeedback) successFeedback.style.display = "block";
             textInput.dataset.correct = "true";
+            // Save state after validation
+            saveQuizState(questionId);
             return true;
           } else {
             // Wrong answer
@@ -285,6 +473,8 @@ document.addEventListener("DOMContentLoaded", function () {
             localStorage.setItem("quizScore", currentScore.toString());
             updateScores();
             textInput.dataset.correct = "false";
+            // Save state after validation
+            saveQuizState(questionId);
             alert("Please enter the correct answer before proceeding.");
             return false;
           }
@@ -301,7 +491,7 @@ document.addEventListener("DOMContentLoaded", function () {
       case 6:
         // Sound matching question
         const soundConnections = document.querySelectorAll(
-          ".sound-connection.complete"
+          ".sound-button.connected"
         );
         if (soundConnections.length < 3) {
           alert("Please complete all sound connections before proceeding.");
@@ -312,7 +502,7 @@ document.addEventListener("DOMContentLoaded", function () {
       case 7:
         // Name matching question
         const nameConnections = document.querySelectorAll(
-          ".name-connection.complete"
+          ".name-item.connected"
         );
         if (nameConnections.length < 3) {
           alert("Please connect all names to instruments before proceeding.");
@@ -361,6 +551,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
       draggable.addEventListener("dragend", function () {
         this.classList.remove("dragging");
+        // Save state after drag ends
+        saveQuizState(currentQuizId);
       });
 
       // Make elements draggable
@@ -416,8 +608,53 @@ document.addEventListener("DOMContentLoaded", function () {
           localStorage.setItem("quizScore", currentScore.toString());
           updateScores();
         }
+
+        // Save state after drop
+        saveQuizState(currentQuizId);
       });
     });
+
+    // Restore saved drag-drop state if available
+    if (window.savedDragDropState && window.savedDragDropState.dropZones) {
+      const state = window.savedDragDropState;
+
+      Object.keys(state.dropZones).forEach((category) => {
+        const dropZone = document.querySelector(
+          `.drop-zone[data-category="${category}"]`
+        );
+        if (!dropZone) return;
+
+        state.dropZones[category].forEach((itemCategory) => {
+          const draggable = document.querySelector(
+            `.draggable[data-category="${itemCategory}"]:not(.placed)`
+          );
+          if (draggable) {
+            dropZone.appendChild(draggable);
+            draggable.classList.add("placed");
+          }
+        });
+      });
+
+      // Check if all items are correctly placed
+      const allCorrect = Array.from(dropZones).every((zone) => {
+        const items = zone.querySelectorAll(".draggable");
+        return (
+          items.length > 0 &&
+          Array.from(items).every(
+            (item) => item.dataset.category === zone.dataset.category
+          )
+        );
+      });
+
+      // Show success feedback if all correct
+      const successFeedback = document.getElementById("success-3");
+      if (allCorrect && successFeedback) {
+        successFeedback.style.display = "block";
+      }
+
+      // Clean up
+      delete window.savedDragDropState;
+    }
   }
 
   function initSoundMatching() {
@@ -497,15 +734,60 @@ document.addEventListener("DOMContentLoaded", function () {
             // All connections made, show success feedback
             if (successFeedback) successFeedback.style.display = "block";
           }
+
+          // Save state after successful connection
+          saveQuizState(currentQuizId);
         } else {
           // Wrong match
           if (errorFeedback) errorFeedback.style.display = "block";
           currentScore -= 0.5;
           localStorage.setItem("quizScore", currentScore.toString());
           updateScores();
+
+          // Save state after unsuccessful attempt
+          saveQuizState(currentQuizId);
         }
       });
     });
+
+    // Restore saved connections if available
+    if (
+      window.savedConnectionState &&
+      window.savedConnectionState.soundConnections &&
+      currentQuizId === 6
+    ) {
+      const state = window.savedConnectionState;
+
+      state.soundConnections.forEach((soundType) => {
+        const soundButton = document.querySelector(
+          `#question-6 .sound-button[data-sound="${soundType}"]`
+        );
+        const instrumentItem = document.querySelector(
+          `#question-6 .instrument-item[data-instrument="${soundType}"]`
+        );
+
+        if (soundButton && instrumentItem) {
+          // Mark as connected
+          soundButton.classList.add("connected");
+          instrumentItem.classList.add("connected");
+
+          // Draw the connection line
+          drawConnectionLine(
+            soundButton,
+            instrumentItem,
+            document.getElementById("connection-lines")
+          );
+
+          // Add to tracked connections
+          completedSoundConnections.add(`${soundType}-${soundType}`);
+        }
+      });
+
+      // Show success feedback if all connections were made
+      if (completedSoundConnections.size === 3 && successFeedback) {
+        successFeedback.style.display = "block";
+      }
+    }
   }
 
   function initNameMatching() {
@@ -575,15 +857,53 @@ document.addEventListener("DOMContentLoaded", function () {
             // All connections made, show success feedback
             if (successFeedback) successFeedback.style.display = "block";
           }
+
+          // Save state after successful connection
+          saveQuizState(currentQuizId);
         } else {
           // Wrong match
           if (errorFeedback) errorFeedback.style.display = "block";
           currentScore -= 0.5;
           localStorage.setItem("quizScore", currentScore.toString());
           updateScores();
+
+          // Save state after unsuccessful attempt
+          saveQuizState(currentQuizId);
         }
       });
     });
+
+    // Restore saved connections if available
+    if (
+      window.savedConnectionState &&
+      window.savedConnectionState.nameConnections &&
+      currentQuizId === 7
+    ) {
+      const state = window.savedConnectionState;
+
+      state.nameConnections.forEach((itemName) => {
+        const nameItem = document.querySelector(
+          `#question-7 .name-item[data-name="${itemName}"]`
+        );
+        const instrumentItem = document.querySelector(
+          `#question-7 .instrument-item[data-instrument="${itemName}"]`
+        );
+
+        if (nameItem && instrumentItem) {
+          // Mark as connected
+          nameItem.classList.add("connected");
+          instrumentItem.classList.add("connected");
+
+          // Add to tracked connections
+          completedNameConnections.add(`${itemName}-${itemName}`);
+        }
+      });
+
+      // Show success feedback if all connections were made
+      if (completedNameConnections.size === 3 && successFeedback) {
+        successFeedback.style.display = "block";
+      }
+    }
   }
 
   function drawConnectionLine(from, to, container) {
