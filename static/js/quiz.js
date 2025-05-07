@@ -69,11 +69,17 @@ document.addEventListener("DOMContentLoaded", function () {
       option.classList.add("selected");
       const checkbox = option.querySelector(".option-checkbox");
 
-      // If it's a wrong answer, show feedback
+      // Hide all feedback messages first
+      const allFeedback = parentQuestion.querySelectorAll(".feedback");
+      allFeedback.forEach((f) => (f.style.display = "none"));
+
+      // If it's a wrong answer, show error feedback
       if (!option.hasAttribute("data-correct")) {
-        const feedback = parentQuestion.querySelector(".feedback");
-        if (feedback) {
-          feedback.style.display = "block";
+        const errorFeedback = parentQuestion.querySelector(
+          ".feedback:not(.success)"
+        );
+        if (errorFeedback) {
+          errorFeedback.style.display = "block";
           if (checkbox) checkbox.innerHTML = "✗";
         }
         // Update score (deduct 0.5 point)
@@ -81,9 +87,10 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.setItem("quizScore", currentScore.toString());
         updateScores();
       } else {
-        // Hide feedback if previously shown
-        const feedback = parentQuestion.querySelector(".feedback");
-        if (feedback) feedback.style.display = "none";
+        // Show success feedback
+        const successFeedback =
+          parentQuestion.querySelector(".feedback.success");
+        if (successFeedback) successFeedback.style.display = "block";
         if (checkbox) checkbox.innerHTML = "✓";
       }
     });
@@ -151,14 +158,19 @@ document.addEventListener("DOMContentLoaded", function () {
     familyInput.addEventListener("keyup", (e) => {
       if (e.key === "Enter") {
         const answer = familyInput.value.trim().toLowerCase();
-        const feedback = document.getElementById("feedback-4");
+        const errorFeedback = document.getElementById("feedback-4");
+        const successFeedback = document.getElementById("success-4");
+
+        // Hide all feedback first
+        if (errorFeedback) errorFeedback.style.display = "none";
+        if (successFeedback) successFeedback.style.display = "none";
 
         if (answer === "percussion") {
           // Correct answer
-          if (feedback) feedback.style.display = "none";
+          if (successFeedback) successFeedback.style.display = "block";
         } else {
           // Wrong answer
-          if (feedback) feedback.style.display = "block";
+          if (errorFeedback) errorFeedback.style.display = "block";
           currentScore -= 0.5;
           localStorage.setItem("quizScore", currentScore.toString());
           updateScores();
@@ -311,14 +323,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const category = e.dataTransfer.getData("text/plain");
         const dragging = document.querySelector(".dragging");
+        const errorFeedback = document.getElementById("feedback-3");
+        const successFeedback = document.getElementById("success-3");
+
+        // Hide all feedback first
+        if (errorFeedback) errorFeedback.style.display = "none";
+        if (successFeedback) successFeedback.style.display = "none";
 
         if (this.dataset.category === category) {
           // Correct drop
           this.appendChild(dragging);
-          document.getElementById("feedback-3").style.display = "none";
+
+          // Check if all instruments are in correct places
+          const allCorrect = Array.from(dropZones).every((zone) => {
+            const items = zone.querySelectorAll(".draggable");
+            return (
+              items.length > 0 &&
+              Array.from(items).every(
+                (item) => item.dataset.category === zone.dataset.category
+              )
+            );
+          });
+
+          // Show success feedback if all correct
+          if (allCorrect && successFeedback) {
+            successFeedback.style.display = "block";
+          }
         } else {
           // Wrong drop
-          document.getElementById("feedback-3").style.display = "block";
+          if (errorFeedback) errorFeedback.style.display = "block";
           currentScore -= 0.5;
           localStorage.setItem("quizScore", currentScore.toString());
           updateScores();
@@ -335,10 +368,17 @@ document.addEventListener("DOMContentLoaded", function () {
       "#question-6 .instrument-item"
     );
     let selectedSound = null;
+    const errorFeedback = document.getElementById("feedback-6");
+    const successFeedback = document.getElementById("success-6");
+    const completedSoundConnections = new Set();
 
     if (soundButtons.length === 0 || instrumentItems.length === 0) {
       return;
     }
+
+    // Hide feedback initially
+    if (errorFeedback) errorFeedback.style.display = "none";
+    if (successFeedback) successFeedback.style.display = "none";
 
     // Add click events to sound buttons
     soundButtons.forEach((btn) => {
@@ -356,6 +396,10 @@ document.addEventListener("DOMContentLoaded", function () {
           alert("Please select a sound first by clicking 'Play Sound'");
           return;
         }
+
+        // Hide feedback
+        if (errorFeedback) errorFeedback.style.display = "none";
+        if (successFeedback) successFeedback.style.display = "none";
 
         // Check if this sound-instrument pair has already been connected
         const connectionKey = `${selectedSound}-${this.dataset.instrument}`;
@@ -390,15 +434,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
           // Check if all connections are made
           if (completedSoundConnections.size === 3) {
-            // All connections made, enable next button
-            const nextBtn = document.querySelector(
-              "#question-6 [data-action='next']"
-            );
-            nextBtn.disabled = false;
+            // All connections made, show success feedback
+            if (successFeedback) successFeedback.style.display = "block";
           }
         } else {
           // Wrong match
-          alert("That's not the correct match. Try again!");
+          if (errorFeedback) errorFeedback.style.display = "block";
           currentScore -= 0.5;
           localStorage.setItem("quizScore", currentScore.toString());
           updateScores();
@@ -413,10 +454,17 @@ document.addEventListener("DOMContentLoaded", function () {
       "#question-7 .instrument-item"
     );
     let selectedName = null;
+    const errorFeedback = document.getElementById("feedback-7");
+    const successFeedback = document.getElementById("success-7");
+    const completedNameConnections = new Set();
 
     if (nameItems.length === 0 || instrumentItems.length === 0) {
       return;
     }
+
+    // Hide feedback initially
+    if (errorFeedback) errorFeedback.style.display = "none";
+    if (successFeedback) successFeedback.style.display = "none";
 
     // Add click events to name items
     nameItems.forEach((item) => {
@@ -431,9 +479,13 @@ document.addEventListener("DOMContentLoaded", function () {
     instrumentItems.forEach((item) => {
       item.addEventListener("click", function () {
         if (!selectedName) {
-          alert("Please select an instrument name first");
+          alert("Please select a name first");
           return;
         }
+
+        // Hide feedback
+        if (errorFeedback) errorFeedback.style.display = "none";
+        if (successFeedback) successFeedback.style.display = "none";
 
         // Check if this name-instrument pair has already been connected
         const connectionKey = `${selectedName}-${this.dataset.instrument}`;
@@ -444,21 +496,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Check if match is correct
         if (selectedName === this.dataset.instrument) {
-          // Draw connection line
-          const nameItem = document.querySelector(
-            `#question-7 .name-item[data-name="${selectedName}"]`
-          );
-
-          drawConnectionLine(
-            nameItem,
-            this,
-            document.getElementById("name-connection-lines")
-          );
-
-          // Add to completed connections
+          // Add connection
           completedNameConnections.add(connectionKey);
 
           // Mark as connected visually
+          const nameItem = document.querySelector(
+            `#question-7 .name-item[data-name="${selectedName}"]`
+          );
           nameItem.classList.add("connected");
           this.classList.add("connected");
 
@@ -468,15 +512,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
           // Check if all connections are made
           if (completedNameConnections.size === 3) {
-            // All connections made, enable next button
-            const nextBtn = document.querySelector(
-              "#question-7 [data-action='next']"
-            );
-            nextBtn.disabled = false;
+            // All connections made, show success feedback
+            if (successFeedback) successFeedback.style.display = "block";
           }
         } else {
           // Wrong match
-          alert("That's not the correct match. Try again!");
+          if (errorFeedback) errorFeedback.style.display = "block";
           currentScore -= 0.5;
           localStorage.setItem("quizScore", currentScore.toString());
           updateScores();
