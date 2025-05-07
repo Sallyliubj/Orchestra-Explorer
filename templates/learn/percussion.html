@@ -92,7 +92,7 @@
     padding: 15px;
     border-radius: 8px;
     transition: all 0.3s ease;
-    height: 360px;  /* Fixed height for consistent card size */
+    height: 360px;
 }
 
 .instrument-link:hover {
@@ -126,9 +126,9 @@
 }
 
 .instrument-img {
-    height: 220px;  /* Fixed height for images */
-    width: 220px;   /* Fixed width for images */
-    object-fit: contain;  /* Maintain aspect ratio */
+    height: 220px;
+    width: 220px;
+    object-fit: contain;
     margin: 0 auto;
     display: block;
     transition: opacity 0.3s ease;
@@ -140,7 +140,7 @@
 }
 
 .play-sound {
-    margin-top: 10px;  /* Push button to bottom */
+    margin-top: 10px;
     margin-bottom: 10px;
     background-color: var(--primary-brown);
     color: var(--cream);
@@ -158,8 +158,12 @@
 $(document).ready(function() {
     $('.play-sound').click(function() {
         const instrument = $(this).data('sound');
-        alert('Playing ' + instrument + ' sound... (Audio functionality to be implemented)');
+        const audio = new Audio(`/static/sounds/percussion/${instrument}.mp3`);
+        audio.play().catch(error => {
+            console.error('Audio playback error:', error);
+            alert('Unable to play sound for ' + instrument);
+        });
     });
 });
 </script>
-{% endblock %} 
+{% endblock %}
