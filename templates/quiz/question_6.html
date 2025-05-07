@@ -1,0 +1,43 @@
+<!-- Question 6: Sound Identification: Connect Sound to Image -->
+<div id="question-6" class="quiz-container">
+  <div class="score-display">
+    Current Score: <span id="current-score">8</span>
+  </div>
+  <h1>Quiz: Identify Sound: Connect Sound to Image</h1>
+
+  <div class="sound-matching-container">
+    <div class="column sounds">
+      <button class="sound-button" data-sound="violin">Play Sound</button>
+      <button class="sound-button" data-sound="cello">Play Sound</button>
+      <button class="sound-button" data-sound="double-bass">Play Sound</button>
+    </div>
+    <div id="connection-lines" class="connection-lines">
+      <!-- Lines will be drawn by JavaScript -->
+    </div>
+    <div class="column instruments">
+      <div class="instrument-item" data-instrument="violin">
+        <img
+          src="{{ url_for('static', filename='images/strings/violin.png') }}"
+          alt="Violin"
+        />
+      </div>
+      <div class="instrument-item" data-instrument="cello">
+        <img
+          src="{{ url_for('static', filename='images/strings/cello.png') }}"
+          alt="Cello"
+        />
+      </div>
+      <div class="instrument-item" data-instrument="double-bass">
+        <img
+          src="{{ url_for('static', filename='images/strings/bass.png') }}"
+          alt="Double Bass"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn" data-action="previous">Previous</button>
+    <button class="btn" data-action="next">Next</button>
+  </div>
+</div>

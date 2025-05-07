@@ -1,0 +1,42 @@
+<!-- Question 1: Spot the Odd One Out -->
+<div id="question-1" class="quiz-container">
+  <div class="score-display">
+    Current Score: <span id="current-score">10</span>
+  </div>
+  <h1>Quiz: Spot the Odd One Out</h1>
+  <div class="quiz-question">Which one does not belong to the group?</div>
+  <div class="quiz-options">
+    <div class="option" data-value="violin">
+      <img
+        src="{{ url_for('static', filename='images/strings/violin.png') }}"
+        alt="Violin"
+      />
+    </div>
+    <div class="option" data-value="cello">
+      <img
+        src="{{ url_for('static', filename='images/strings/cello.png') }}"
+        alt="Cello"
+      />
+    </div>
+    <div class="option" data-value="trumpet" data-correct="true">
+      <img
+        src="{{ url_for('static', filename='images/brass/trumpet.png') }}"
+        alt="Trumpet"
+      />
+    </div>
+  </div>
+  <div id="feedback-1" class="feedback">
+    This is not the right answer – let's try again :)
+  </div>
+  <div class="hint-container">
+    <button class="hint-btn">Hint</button>
+    <div class="hint-content">
+      Listen to the sounds of the three instruments, you'll notice the
+      difference!
+    </div>
+  </div>
+  <div class="controls">
+    <button class="btn" data-action="previous">Previous</button>
+    <button class="btn" data-action="next">Next</button>
+  </div>
+</div>

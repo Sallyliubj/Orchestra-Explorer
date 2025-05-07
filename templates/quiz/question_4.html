@@ -1,0 +1,35 @@
+<!-- Question 4: Text Input -->
+<div id="question-4" class="quiz-container">
+  <div class="score-display">
+    Current Score: <span id="current-score">8.5</span>
+  </div>
+  <h1>Quiz: Family Identification</h1>
+  <div class="quiz-question">
+    Which family of instruments is shown in the image?
+  </div>
+  <img
+    src="{{ url_for('static', filename='images/percussion/xylophone.png') }}"
+    alt="Percussion Family"
+    class="question-image"
+  />
+  <div class="input-container">
+    <input
+      type="text"
+      id="family-input"
+      placeholder="Enter the family name..."
+    />
+  </div>
+  <div id="feedback-4" class="feedback">
+    That's not the right family – try again!
+  </div>
+  <div class="hint-container">
+    <button class="hint-btn">Hint</button>
+    <div class="hint-content">
+      These instruments are played by striking, shaking, or scraping them.
+    </div>
+  </div>
+  <div class="controls">
+    <button class="btn" data-action="previous">Previous</button>
+    <button class="btn" data-action="next">Next</button>
+  </div>
+</div>

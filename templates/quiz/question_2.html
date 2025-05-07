@@ -1,0 +1,47 @@
+<!-- Question 2: Sound Matching -->
+<div id="question-2" class="quiz-container">
+  <div class="score-display">
+    Current Score: <span id="current-score">9.5</span>
+  </div>
+  <h1>Quiz: Sound Matching</h1>
+  <div class="quiz-question">Which instrument has the sound?</div>
+  <button class="sound-button">Listen to the sound</button>
+  <div class="quiz-options">
+    <div class="option" data-value="timpani">
+      <img
+        src="{{ url_for('static', filename='images/percussion/timpani.png') }}"
+        alt="Timpani"
+      />
+    </div>
+    <div class="option" data-value="violin" data-correct="true">
+      <img
+        src="{{ url_for('static', filename='images/strings/violin.png') }}"
+        alt="Violin"
+      />
+    </div>
+    <div class="option" data-value="brass">
+      <img
+        src="{{ url_for('static', filename='images/brass/trumpet.png') }}"
+        alt="Brass"
+      />
+    </div>
+    <div class="option" data-value="clarinet">
+      <img src={{ url_for('static', filename='images/woodwinds/clarinet.png') }}
+      alt="Clarinet" />
+    </div>
+  </div>
+  <div id="feedback-2" class="feedback">
+    This is not the right answer – let's try again :)
+  </div>
+  <div class="hint-container">
+    <button class="hint-btn">Hint</button>
+    <div class="hint-content">
+      The four instruments (from left to right) belong to the following classes:
+      percussion, strings, brass, woodwinds.
+    </div>
+  </div>
+  <div class="controls">
+    <button class="btn" data-action="previous">Previous</button>
+    <button class="btn" data-action="next">Next</button>
+  </div>
+</div>

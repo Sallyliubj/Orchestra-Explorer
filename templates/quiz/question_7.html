@@ -1,0 +1,63 @@
+<!-- Question 7: Name Matching -->
+<div id="question-7" class="quiz-container">
+  <div class="score-display">
+    Current Score: <span id="current-score">7</span>
+  </div>
+  <h1>Quiz: Name Matching</h1>
+  <div class="quiz-question">Match each instrument name to its picture.</div>
+
+  <div class="sound-matching-container">
+    <div class="column">
+      <div class="name-item" data-name="violin">
+        <div class="name-box">Violin</div>
+      </div>
+      <div class="name-item" data-name="flute">
+        <div class="name-box">Flute</div>
+      </div>
+      <div class="name-item" data-name="trumpet">
+        <div class="name-box">Trumpet</div>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="instrument-item" data-instrument="violin">
+        <img
+          src="{{ url_for('static', filename='images/strings/violin.png') }}"
+          alt="Violin"
+        />
+      </div>
+      <div class="instrument-item" data-instrument="flute">
+        <img
+          src="{{ url_for('static', filename='images/woodwinds/flute.png') }}"
+          alt="Flute"
+        />
+      </div>
+      <div class="instrument-item" data-instrument="trumpet">
+        <img
+          src="{{ url_for('static', filename='images/brass/trumpet.png') }}"
+          alt="Trumpet"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div id="name-connection-lines"></div>
+
+  <div id="feedback-7" class="feedback">
+    That's not the right match – try again!
+  </div>
+
+  <div class="hint-container">
+    <button class="hint-btn">Hint</button>
+    <div class="hint-content">
+      Look at the shape and size of each instrument. The violin is the smallest
+      string instrument, the flute is a long silver tube, and the trumpet has a
+      distinctive coiled shape.
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn" data-action="previous">Previous</button>
+    <button class="btn" data-action="next">Next</button>
+  </div>
+</div>

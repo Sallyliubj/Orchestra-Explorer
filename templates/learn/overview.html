@@ -1,95 +1,117 @@
-{% extends "base.html" %}
-
-{% block title %}Learn - Overview{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Learn - Overview{% endblock %} {%
+block content %}
 
 <div class="mb-4">
-    <a href="{{ url_for('home') }}" class="btn btn-outline-secondary button-color">
-        &larr; Back to Home
-    </a>
+  <a
+    href="{{ url_for('home') }}"
+    class="btn btn-outline-secondary button-color"
+  >
+    &larr; Back to Home
+  </a>
 </div>
 
 <div class="container py-5">
-    <h1 class="text-center mb-5">Orchestra Sections Overview</h1>
-    <p class="lead text-center mb-5">Click on any section to learn more about its instruments</p>
+  <h1 class="text-center mb-5">Orchestra Sections Overview</h1>
+  <p class="lead text-center mb-5">
+    Click on any section to learn more about its instruments
+  </p>
 
-    <div class="row row-cols-1 row-cols-md-2 g-4">
-        <!-- Strings Section -->
-        <div class="col">
-            <a href="{{ url_for('learn_family', family='strings') }}" class="text-decoration-none">
-                <div class="card h-100 hover-shadow">
-                    <div class="card-body text-center">
-                        <h3 class="card-title">String Family</h3>
-                        <p class="card-text">Discover violins, violas, cellos, and more</p>
-                        <div class="mt-3">
-                            <button class="btn btn-primary button-color">Explore Strings</button>
-                        </div>
-                    </div>
-                </div>
-            </a>
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    <!-- Strings Section -->
+    <div class="col">
+      <a
+        href="{{ url_for('learn_family', family='strings') }}"
+        class="text-decoration-none"
+      >
+        <div class="card h-100 hover-shadow">
+          <div class="card-body text-center">
+            <h3 class="card-title">String Family</h3>
+            <p class="card-text">Discover violins, violas, cellos, and more</p>
+            <div class="mt-3">
+              <button class="btn btn-primary button-color">
+                Explore Strings
+              </button>
+            </div>
+          </div>
         </div>
-
-        <!-- Woodwinds Section -->
-        <div class="col">
-            <a href="{{ url_for('learn_family', family='woodwinds') }}" class="text-decoration-none">
-                <div class="card h-100 hover-shadow">
-                    <div class="card-body text-center">
-                        <h3 class="card-title">Woodwind Family</h3>
-                        <p class="card-text">Learn about flutes, clarinets, oboes, and more</p>
-                        <div class="mt-3">
-                            <button class="btn btn-primary button-color">Explore Woodwinds</button>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <!-- Brass Section -->
-        <div class="col">
-            <a href="{{ url_for('learn_family', family='brass') }}" class="text-decoration-none">
-                <div class="card h-100 hover-shadow">
-                    <div class="card-body text-center">
-                        <h3 class="card-title">Brass Family</h3>
-                        <p class="card-text">Explore trumpets, trombones, horns, and more</p>
-                        <div class="mt-3">
-                            <button class="btn btn-primary button-color">Explore Brass</button>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <!-- Percussion Section -->
-        <div class="col">
-            <a href="{{ url_for('learn_family', family='percussion') }}" class="text-decoration-none">
-                <div class="card h-100 hover-shadow">
-                    <div class="card-body text-center">
-                        <h3 class="card-title">Percussion Family</h3>
-                        <p class="card-text">Discover timpani, cymbals, drums, and more</p>
-                        <div class="mt-3">
-                            <button class="btn btn-primary button-color">Explore Percussion</button>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
+      </a>
     </div>
+
+    <!-- Woodwinds Section -->
+    <div class="col">
+      <a
+        href="{{ url_for('learn_family', family='woodwinds') }}"
+        class="text-decoration-none"
+      >
+        <div class="card h-100 hover-shadow">
+          <div class="card-body text-center">
+            <h3 class="card-title">Woodwind Family</h3>
+            <p class="card-text">
+              Learn about flutes, clarinets, oboes, and more
+            </p>
+            <div class="mt-3">
+              <button class="btn btn-primary button-color">
+                Explore Woodwinds
+              </button>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Brass Section -->
+    <div class="col">
+      <a
+        href="{{ url_for('learn_family', family='brass') }}"
+        class="text-decoration-none"
+      >
+        <div class="card h-100 hover-shadow">
+          <div class="card-body text-center">
+            <h3 class="card-title">Brass Family</h3>
+            <p class="card-text">
+              Explore trumpets, trombones, horns, and more
+            </p>
+            <div class="mt-3">
+              <button class="btn btn-primary button-color">
+                Explore Brass
+              </button>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Percussion Section -->
+    <div class="col">
+      <a
+        href="{{ url_for('learn_family', family='percussion') }}"
+        class="text-decoration-none"
+      >
+        <div class="card h-100 hover-shadow">
+          <div class="card-body text-center">
+            <h3 class="card-title">Percussion Family</h3>
+            <p class="card-text">Discover timpani, cymbals, drums, and more</p>
+            <div class="mt-3">
+              <button class="btn btn-primary button-color">
+                Explore Percussion
+              </button>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
+{% endblock %} {% block scripts %}
 <style>
-    .hover-shadow:hover {
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        transform: translateY(-3px);
-        transition: all 0.3s ease;
-    }
-    .button-color{
-        background-color: var(--primary-brown);
-        color: var(--cream);
-    }
+  .hover-shadow:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+    transition: all 0.3s ease;
+  }
+  .button-color {
+    background-color: var(--primary-brown);
+    color: var(--cream);
+  }
 </style>
-{% endblock %} 
-
-
+{% endblock %}

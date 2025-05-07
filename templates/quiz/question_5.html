@@ -1,0 +1,51 @@
+<!-- Question 5: Sound Identification -->
+<div id="question-5" class="quiz-container">
+  <div class="score-display">
+    Current Score: <span id="current-score">8</span>
+  </div>
+  <h1>Quiz: Sound Identification</h1>
+  <div class="quiz-question">Which instrument is playing the melody?</div>
+  <button class="sound-button" data-sound="violin">
+    Listen to the excerpt
+  </button>
+  <div class="quiz-options">
+    <div class="option" data-value="violin" data-correct="true">
+      <img
+        src="{{ url_for('static', filename='images/strings/violin.png') }}"
+        alt="Violin"
+      />
+    </div>
+    <div class="option" data-value="flute">
+      <img
+        src="{{ url_for('static', filename='images/woodwinds/flute.png') }}"
+        alt="Flute"
+      />
+    </div>
+    <div class="option" data-value="trumpet">
+      <img
+        src="{{ url_for('static', filename='images/brass/trumpet.png') }}"
+        alt="Trumpet"
+      />
+    </div>
+    <div class="option" data-value="piano">
+      <img
+        src="{{ url_for('static', filename='images/percussion/snare.png') }}"
+        alt="Piano"
+      />
+    </div>
+  </div>
+  <div id="feedback-5" class="feedback">
+    That's not the right instrument – try again!
+  </div>
+  <div class="hint-container">
+    <button class="hint-btn">Hint</button>
+    <div class="hint-content">
+      This instrument is known for its ability to play expressive melodies and
+      is often the lead instrument in orchestral pieces.
+    </div>
+  </div>
+  <div class="controls">
+    <button class="btn" data-action="previous">Previous</button>
+    <button class="btn" data-action="next">Next</button>
+  </div>
+</div>

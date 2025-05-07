@@ -1,0 +1,69 @@
+<!-- Question 3: Drag and Drop -->
+<div id="question-3" class="quiz-container">
+  <div class="score-display">
+    Current Score: <span id="current-score">9</span>
+  </div>
+  <h1>Quiz: Drag and Drop</h1>
+  <div class="quiz-question">Drag each instrument to its correct family.</div>
+
+  <div class="dropzone-container">
+    <div class="drop-zone" data-category="strings">
+      <div class="drop-zone-title">String Family</div>
+    </div>
+    <div class="drop-zone" data-category="woodwinds">
+      <div class="drop-zone-title">Woodwind Family</div>
+    </div>
+    <div class="drop-zone" data-category="brass">
+      <div class="drop-zone-title">Brass Family</div>
+    </div>
+    <div class="drop-zone" data-category="percussion">
+      <div class="drop-zone-title">Percussion Family</div>
+    </div>
+  </div>
+
+  <div class="draggable-items">
+    <img
+      class="draggable"
+      src="{{ url_for('static', filename='images/strings/violin.png') }}"
+      alt="Violin"
+      data-category="strings"
+    />
+    <img
+      class="draggable"
+      src="{{ url_for('static', filename='images/woodwinds/flute.png') }}"
+      alt="Flute"
+      data-category="woodwinds"
+    />
+    <img
+      class="draggable"
+      src="{{ url_for('static', filename='images/brass/trumpet.png') }}"
+      alt="Trumpet"
+      data-category="brass"
+    />
+    <img
+      class="draggable"
+      src="{{ url_for('static', filename='images/percussion/timpani.png') }}"
+      alt="Timpani"
+      data-category="percussion"
+    />
+  </div>
+
+  <div id="feedback-3" class="feedback">
+    That's not the right family – try again!
+  </div>
+
+  <div class="hint-container">
+    <button class="hint-btn">Hint</button>
+    <div class="hint-content">
+      Think about how each instrument produces sound. String instruments use
+      vibrating strings, woodwinds use air through a reed or hole, brass
+      instruments use buzzing lips, and percussion instruments are struck or
+      shaken.
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn" data-action="previous">Previous</button>
+    <button class="btn" data-action="next">Next</button>
+  </div>
+</div>
