@@ -10,108 +10,196 @@ block content %}
   </a>
 </div>
 
-<div class="container py-5">
+<div class="container-fluid py-5">
   <h1 class="text-center mb-5">Orchestra Sections Overview</h1>
   <p class="lead text-center mb-5">
     Click on any section to learn more about its instruments
   </p>
 
-  <div class="row row-cols-1 row-cols-md-2 g-4">
-    <!-- Strings Section -->
-    <div class="col">
-      <a
-        href="{{ url_for('learn_family', family='strings') }}"
-        class="text-decoration-none"
-      >
-        <div class="card h-100 hover-shadow">
-          <div class="card-body text-center">
-            <h3 class="card-title">String Family</h3>
-            <p class="card-text">Discover violins, violas, cellos, and more</p>
-            <div class="mt-3">
-              <button class="btn btn-primary button-color">
-                Explore Strings
-              </button>
-            </div>
-          </div>
-        </div>
-      </a>
-    </div>
+  <div class="orchestra-fan-layout" style="height: 900px; position: relative; background: none;">
+    <svg class="orchestra-fan-bg" viewBox="0 0 1300 900" width="100%" height="100%" preserveAspectRatio="xMidYMin meet" style="position: absolute; top: 0; left: 0; z-index: 1; background: none;">
+      <!-- Arcs (moved down) -->
+      <path d="M 50 800 Q 650 700 1250 800" fill="none" stroke="#bfa76f" stroke-width="3"/>
+      <path d="M 150 640 Q 650 550 1150 640" fill="none" stroke="#bfa76f" stroke-width="2"/>
+      <path d="M 275 470 Q 650 380 1025 470" fill="none" stroke="#bfa76f" stroke-width="2"/>
+      <path d="M 10 1000 Q 650 850 1500 1000" fill="none" stroke="#bfa76f" stroke-width="4"/>
 
-    <!-- Woodwinds Section -->
-    <div class="col">
-      <a
-        href="{{ url_for('learn_family', family='woodwinds') }}"
-        class="text-decoration-none"
-      >
-        <div class="card h-100 hover-shadow">
-          <div class="card-body text-center">
-            <h3 class="card-title">Woodwind Family</h3>
-            <p class="card-text">
-              Learn about flutes, clarinets, oboes, and more
-            </p>
-            <div class="mt-3">
-              <button class="btn btn-primary button-color">
-                Explore Woodwinds
-              </button>
-            </div>
-          </div>
-        </div>
-      </a>
-    </div>
+      <!-- Family Section Labels -->
+      <text x="650" y="850" text-anchor="middle" fill="#bfa76f" font-size="24" font-weight="bold">Strings</text>
+      <text x="650" y="700" text-anchor="middle" fill="#8ecae6" font-size="24" font-weight="bold">Woodwinds</text>
+      <text x="650" y="530" text-anchor="middle" fill="#ffb703" font-size="24" font-weight="bold">Brass</text>
+      <text x="650" y="260" text-anchor="middle" fill="#b5838d" font-size="24" font-weight="bold">Percussion</text>
 
-    <!-- Brass Section -->
-    <div class="col">
-      <a
-        href="{{ url_for('learn_family', family='brass') }}"
-        class="text-decoration-none"
-      >
-        <div class="card h-100 hover-shadow">
-          <div class="card-body text-center">
-            <h3 class="card-title">Brass Family</h3>
-            <p class="card-text">
-              Explore trumpets, trombones, horns, and more
-            </p>
-            <div class="mt-3">
-              <button class="btn btn-primary button-color">
-                Explore Brass
-              </button>
-            </div>
-          </div>
-        </div>
-      </a>
-    </div>
+      <!-- Strings Family (Front Arc) -->
+      <image href="{{ url_for('static', filename='images/strings/violin.png') }}" x="250" y="800" width="100" height="100" />
+      <text x="300" y="920" text-anchor="middle" fill="#333" font-size="14">Violin</text>
+      <image href="{{ url_for('static', filename='images/strings/viola.png') }}" x="520" y="775" width="100" height="100" />
+      <text x="570" y="895" text-anchor="middle" fill="#333" font-size="14">Viola</text>
+      <image href="{{ url_for('static', filename='images/strings/cello.png') }}" x="780" y="775" width="100" height="100" />
+      <text x="830" y="895" text-anchor="middle" fill="#333" font-size="14">Cello</text>
+      <image href="{{ url_for('static', filename='images/strings/bass.png') }}" x="1000" y="800" width="100" height="100" />
+      <text x="1050" y="920" text-anchor="middle" fill="#333" font-size="14">Bass</text>
 
-    <!-- Percussion Section -->
-    <div class="col">
-      <a
-        href="{{ url_for('learn_family', family='percussion') }}"
-        class="text-decoration-none"
-      >
-        <div class="card h-100 hover-shadow">
-          <div class="card-body text-center">
-            <h3 class="card-title">Percussion Family</h3>
-            <p class="card-text">Discover timpani, cymbals, drums, and more</p>
-            <div class="mt-3">
-              <button class="btn btn-primary button-color">
-                Explore Percussion
-              </button>
-            </div>
-          </div>
-        </div>
-      </a>
-    </div>
+      <!-- Woodwinds Family (Second Arc) -->
+      <image href="{{ url_for('static', filename='images/woodwinds/flute.png') }}" x="320" y="620" width="100" height="100" />
+      <text x="370" y="740" text-anchor="middle" fill="#333" font-size="14">Flute</text>
+      <image href="{{ url_for('static', filename='images/woodwinds/oboe.png') }}" x="520" y="610" width="100" height="100" />
+      <text x="570" y="730" text-anchor="middle" fill="#333" font-size="14">Oboe</text>
+      <image href="{{ url_for('static', filename='images/woodwinds/clarinet.png') }}" x="720" y="610" width="100" height="100" />
+      <text x="770" y="730" text-anchor="middle" fill="#333" font-size="14">Clarinet</text>
+      <image href="{{ url_for('static', filename='images/woodwinds/bassoon.png') }}" x="920" y="620" width="100" height="100" />
+      <text x="970" y="740" text-anchor="middle" fill="#333" font-size="14">Bassoon</text>
+
+      <!-- Brass Family (Third Arc) -->
+      <image href="{{ url_for('static', filename='images/brass/trumpet.png') }}" x="390" y="460" width="100" height="100" />
+      <text x="440" y="580" text-anchor="middle" fill="#333" font-size="14">Trumpet</text>
+      <image href="{{ url_for('static', filename='images/brass/french_horn.png') }}" x="540" y="450" width="100" height="100" />
+      <text x="590" y="570" text-anchor="middle" fill="#333" font-size="14">French Horn</text>
+      <image href="{{ url_for('static', filename='images/brass/trombone.png') }}" x="690" y="450" width="100" height="100" />
+      <text x="740" y="570" text-anchor="middle" fill="#333" font-size="14">Trombone</text>
+      <image href="{{ url_for('static', filename='images/brass/tuba.png') }}" x="840" y="460" width="100" height="100" />
+      <text x="890" y="580" text-anchor="middle" fill="#333" font-size="14">Tuba</text>
+
+      <!-- Percussion Family (Back Arc) -->
+      <image href="{{ url_for('static', filename='images/percussion/snare.png') }}" x="450" y="290" width="80" height="80" />
+      <text x="490" y="390" text-anchor="middle" fill="#333" font-size="14">Snare</text>
+      <image href="{{ url_for('static', filename='images/percussion/timpani.png') }}" x="550" y="280" width="80" height="80" />
+      <text x="590" y="380" text-anchor="middle" fill="#333" font-size="14">Timpani</text>
+      <image href="{{ url_for('static', filename='images/percussion/bassdrum.png') }}" x="650" y="280" width="80" height="80" />
+      <text x="690" y="380" text-anchor="middle" fill="#333" font-size="14">Bass Drum</text>
+      <image href="{{ url_for('static', filename='images/percussion/xylophone.png') }}" x="750" y="290" width="80" height="80" />
+      <text x="790" y="390" text-anchor="middle" fill="#333" font-size="14">Xylophone</text>
+    </svg>
+
+    <!-- HTML clickable overlays for each family -->
+    <a href="{{ url_for('learn_family', family='strings') }}" class="fan-family-overlay fan-strings-overlay"></a>
+    <a href="{{ url_for('learn_family', family='woodwinds') }}" class="fan-family-overlay fan-woodwinds-overlay"></a>
+    <a href="{{ url_for('learn_family', family='brass') }}" class="fan-family-overlay fan-brass-overlay"></a>
+    <a href="{{ url_for('learn_family', family='percussion') }}" class="fan-family-overlay fan-percussion-overlay"></a>
   </div>
 </div>
-{% endblock %} {% block scripts %}
+
 <style>
-  .hover-shadow:hover {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    transform: translateY(-3px);
-    transition: all 0.3s ease;
+  .orchestra-fan-layout {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    height: 400px;
+    margin: 0 auto;
+    background: #f8f9fa;
+    border-radius: 0 0 600px 600px / 0 0 400px 400px;
+    overflow: hidden;
   }
-  .button-color {
-    background-color: var(--primary-brown);
-    color: var(--cream);
+  .orchestra-fan-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .family-link {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 2;
+    display: block;
+    pointer-events: auto;
+  }
+  .family-content {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .family-link .instrument-img {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+    transition: transform 0.3s;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+  .family-link:hover .instrument-img {
+    transform: scale(1.08);
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+  }
+  .family-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 2;
+    pointer-events: auto;
+    border-radius: 50%;
+    opacity: 0.18;
+    transition: opacity 0.3s, box-shadow 0.3s;
+  }
+  .family-strings {
+    clip-path: polygon(30% 80%, 70% 80%, 62% 65%, 38% 65%);
+  }
+  .family-woodwinds {
+    clip-path: polygon(30% 80%, 70% 80%, 62% 65%, 38% 65%);
+  }
+  .family-brass {
+    clip-path: polygon(38% 65%, 62% 65%, 57% 48%, 43% 48%);
+  }
+  .family-percussion {
+    clip-path: polygon(43% 48%, 57% 48%, 54% 20%, 46% 20%);
+  }
+  .family-strings-overlay {
+    background: #bfa76f;
+    clip-path: polygon(30% 80%, 70% 80%, 62% 65%, 38% 65%);
+  }
+  .family-woodwinds-overlay {
+    background: #8ecae6;
+    clip-path: polygon(30% 80%, 70% 80%, 62% 65%, 38% 65%);
+  }
+  .family-brass-overlay {
+    background: #ffb703;
+    clip-path: polygon(38% 65%, 62% 65%, 57% 48%, 43% 48%);
+  }
+  .family-percussion-overlay {
+    background: #b5838d;
+    clip-path: polygon(40% 20%, 60% 20%, 67% 37%, 33% 37%);
+  }
+  .family-link:hover .family-overlay {
+    opacity: 0.35;
+    box-shadow: 0 0 24px 8px rgba(0,0,0,0.08);
+  }
+  @media (max-width: 900px) {
+    .orchestra-fan-layout { height: 400px; }
+    .family-link .instrument-img { width: 40px; height: 40px; }
+  }
+  @media (max-width: 600px) {
+    .orchestra-fan-layout { height: 250px; }
+    .family-link .instrument-img { width: 24px; height: 24px; }
+  }
+  .fan-family-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 2;
+    display: block;
+    background: transparent;
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+  .fan-strings-overlay {
+    clip-path: polygon(15% 65%, 85% 65%, 95% 80%, 5% 80%);
+    background: rgba(191, 167, 111, 0.18);
+  }
+  .fan-woodwinds-overlay {
+    clip-path: polygon(20% 50%, 80% 50%, 85% 65%, 15% 65%);
+    background: rgba(142, 202, 230, 0.18);
+  }
+  .fan-brass-overlay {
+    clip-path: polygon(33% 37%, 67% 37%, 80% 50%, 20% 50%);
+    background: rgba(255, 183, 3, 0.18);
+  }
+  .fan-percussion-overlay {
+    clip-path: polygon(40% 20%, 60% 20%, 67% 37%, 33% 37%);
+    background: rgba(181, 131, 141, 0.18);
+  }
+  .fan-family-overlay:hover {
+    background: rgba(200, 180, 80, 0.12);
+    box-shadow: 0 0 24px 8px rgba(0,0,0,0.08);
+    cursor: pointer;
   }
 </style>
 {% endblock %}
