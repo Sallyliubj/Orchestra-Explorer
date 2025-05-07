@@ -37,7 +37,11 @@ def get_previous_instrument(family, current_instrument):
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    learning_completed = are_all_instruments_viewed()
+    quiz_completed = is_quiz_completed()
+    return render_template('home.html', 
+                         learning_completed=learning_completed,
+                         quiz_completed=quiz_completed)
 
 def log_interaction(action):
     if 'interactions' not in session:
@@ -132,6 +136,29 @@ def view_interactions():
     interactions = session.get('interactions', [])
     print("Rendering interactions page with:", interactions)
     return render_template('interactions.html', interactions=interactions)
+
+def are_all_instruments_viewed():
+    if 'viewed_instruments' not in session:
+        return False
+    
+    viewed = session['viewed_instruments']
+    for family, instruments in INSTRUMENTS_BY_FAMILY.items():
+        if family not in viewed:
+            return False
+        for instrument in instruments:
+            if not viewed[family].get(instrument, False):
+                return False
+    return True
+
+def is_quiz_completed():
+    if 'interactions' not in session:
+        return False
+    
+    # Check if user has accessed the certificate page (quiz_id=8)
+    for interaction in session['interactions']:
+        if interaction['action'] == "Accessed Quiz Question 8":
+            return True
+    return False
 
 if __name__ == '__main__':
     app.run(debug=True)
