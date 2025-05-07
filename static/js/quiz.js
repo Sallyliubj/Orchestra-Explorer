@@ -945,13 +945,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Check if match is correct
         if (selectedName === this.dataset.instrument) {
+          // Draw connection line
+          const nameItem = document.querySelector(
+            `#question-7 .name-item[data-name="${selectedName}"]`
+          );
+          drawConnectionLine(
+            nameItem,
+            this,
+            document.getElementById("connection-lines")
+          );
+
           // Add connection
           completedNameConnections.add(connectionKey);
 
           // Mark as connected visually
-          const nameItem = document.querySelector(
-            `#question-7 .name-item[data-name="${selectedName}"]`
-          );
           nameItem.classList.add("connected");
           this.classList.add("connected");
 
@@ -1000,6 +1007,13 @@ document.addEventListener("DOMContentLoaded", function () {
           // Mark as connected
           nameItem.classList.add("connected");
           instrumentItem.classList.add("connected");
+
+          // Draw the connection line
+          drawConnectionLine(
+            nameItem,
+            instrumentItem,
+            document.getElementById("connection-lines")
+          );
 
           // Add to tracked connections
           completedNameConnections.add(`${itemName}-${itemName}`);
