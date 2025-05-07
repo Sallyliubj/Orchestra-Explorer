@@ -69,7 +69,9 @@
                 <div class="card-body text-center">
                     <h1 class="card-title">{{ instrument_name|title }}</h1>
                     <p class="lead">{{ description }}</p>
-                    <button class="btn btn-primary btn-lg play-sound" data-sound="{{ instrument_id }}">
+                    <button class="btn btn-primary btn-lg play-sound" 
+                            data-sound="{{ instrument_id }}" 
+                            data-family="{{ family }}">
                         <i class="fas fa-play me-2"></i>Listen to the Sound
                     </button>
                 </div>
@@ -238,7 +240,7 @@
 
 .video-container {
     position: relative;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    padding-bottom: 56.25%;
     height: 0;
     overflow: hidden;
 }
@@ -288,11 +290,30 @@
 </style>
 
 <script>
-$(document).ready(function() {
-    $('.play-sound').click(function() {
+$(document).ready(function () {
+    $('.play-sound').click(function () {
         const instrument = $(this).data('sound');
-        // Here you would add the logic to play the sound
-        alert('Playing ' + instrument + ' sound... (Audio functionality to be implemented)');
+        const family = $(this).data('family');
+        const audioPath = `/static/sounds/${family}/${instrument}.mp3`;
+
+        if (!instrument || !family) {
+            console.error('Missing data-sound or data-family attribute.');
+            alert('Instrument or family data is missing.');
+            return;
+        }
+
+        if (window.currentAudio) {
+            window.currentAudio.pause();
+            window.currentAudio.currentTime = 0;
+        }
+
+        const audio = new Audio(audioPath);
+        window.currentAudio = audio;
+
+        audio.play().catch(e => {
+            console.error("Playback failed:", e);
+            alert("Audio could not be played. Please check if the file exists or if browser permissions are blocking it.");
+        });
     });
 });
 </script>
