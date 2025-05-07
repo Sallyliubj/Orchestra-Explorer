@@ -155,8 +155,18 @@ document.addEventListener("DOMContentLoaded", function () {
   // Handle text input questions (like question 4)
   const familyInput = document.getElementById("family-input");
   if (familyInput) {
-    familyInput.addEventListener("keyup", (e) => {
-      if (e.key === "Enter") {
+    // Add a check button next to the input
+    const inputContainer = familyInput.closest(".input-container");
+    if (inputContainer) {
+      const checkBtn = document.createElement("button");
+      checkBtn.id = "check-answer-btn";
+      checkBtn.className = "btn";
+      checkBtn.textContent = "Check Answer";
+      checkBtn.style.marginLeft = "10px";
+      inputContainer.appendChild(checkBtn);
+
+      // Function to check the answer
+      const checkAnswer = () => {
         const answer = familyInput.value.trim().toLowerCase();
         const errorFeedback = document.getElementById("feedback-4");
         const successFeedback = document.getElementById("success-4");
@@ -168,15 +178,27 @@ document.addEventListener("DOMContentLoaded", function () {
         if (answer === "percussion") {
           // Correct answer
           if (successFeedback) successFeedback.style.display = "block";
+          familyInput.dataset.correct = "true";
         } else {
           // Wrong answer
           if (errorFeedback) errorFeedback.style.display = "block";
           currentScore -= 0.5;
           localStorage.setItem("quizScore", currentScore.toString());
           updateScores();
+          familyInput.dataset.correct = "false";
         }
-      }
-    });
+      };
+
+      // Check answer on button click
+      checkBtn.addEventListener("click", checkAnswer);
+
+      // Check answer on Enter key
+      familyInput.addEventListener("keyup", (e) => {
+        if (e.key === "Enter") {
+          checkAnswer();
+        }
+      });
+    }
   }
 
   // Initialize drag and drop functionality if present on page
@@ -232,10 +254,48 @@ document.addEventListener("DOMContentLoaded", function () {
       case 4:
         // Text input question
         const textInput = document.getElementById("family-input");
-        if (textInput && textInput.value.trim() === "") {
+        if (!textInput) return true;
+
+        // If no input given
+        if (textInput.value.trim() === "") {
           alert("Please enter an answer before proceeding.");
           return false;
         }
+
+        // If answer hasn't been checked yet
+        if (!textInput.hasAttribute("data-correct")) {
+          // Automatically check the answer
+          const answer = textInput.value.trim().toLowerCase();
+          const errorFeedback = document.getElementById("feedback-4");
+          const successFeedback = document.getElementById("success-4");
+
+          // Hide all feedback first
+          if (errorFeedback) errorFeedback.style.display = "none";
+          if (successFeedback) successFeedback.style.display = "none";
+
+          if (answer === "percussion") {
+            // Correct answer
+            if (successFeedback) successFeedback.style.display = "block";
+            textInput.dataset.correct = "true";
+            return true;
+          } else {
+            // Wrong answer
+            if (errorFeedback) errorFeedback.style.display = "block";
+            currentScore -= 0.5;
+            localStorage.setItem("quizScore", currentScore.toString());
+            updateScores();
+            textInput.dataset.correct = "false";
+            alert("Please enter the correct answer before proceeding.");
+            return false;
+          }
+        }
+
+        // If answer has been checked and it's wrong
+        if (textInput.dataset.correct === "false") {
+          alert("Please enter the correct answer before proceeding.");
+          return false;
+        }
+
         return true;
 
       case 6:

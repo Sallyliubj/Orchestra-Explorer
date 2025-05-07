@@ -472,3 +472,34 @@ h3 {
   margin: 20px auto;
   display: block;
 }
+
+/* Question 4 Input Styling */
+.input-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+  max-width: 600px;
+}
+
+#family-input {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  width: 300px;
+}
+
+#family-input[data-correct="true"] {
+  border-color: #27ae60;
+  background-color: #d4f5e2;
+}
+
+#family-input[data-correct="false"] {
+  border-color: #e74c3c;
+  background-color: #fadbd8;
+}
+
+#check-answer-btn {
+  margin-left: 10px;
+}
