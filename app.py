@@ -103,8 +103,29 @@ def learn_instrument(family, instrument):
                              instrument=instrument.replace('-', ' ').title())
 
 @app.route('/quiz')
-def quiz():
-    return render_template('quiz.html')
+@app.route('/quiz/<int:quiz_id>')
+def quiz(quiz_id=None):
+    if quiz_id is None:
+        # Initial quiz page (start)
+        return render_template('quiz/start.html')
+    
+    # Map quiz_id to respective templates
+    quiz_templates = {
+        1: 'quiz/question_1.html',
+        2: 'quiz/question_2.html',
+        3: 'quiz/question_3.html',
+        4: 'quiz/question_4.html',
+        5: 'quiz/question_5.html',
+        6: 'quiz/question_6.html',
+        7: 'quiz/question_7.html',
+        8: 'quiz/certificate.html'
+    }
+    
+    if quiz_id in quiz_templates:
+        log_interaction(f"Accessed Quiz Question {quiz_id}")
+        return render_template('quiz.html', quiz_template=quiz_templates[quiz_id])
+    else:
+        abort(404)
 
 @app.route('/interactions')
 def view_interactions():

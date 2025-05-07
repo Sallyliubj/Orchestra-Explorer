@@ -1,5 +1,6 @@
 // DOM Elements
 document.addEventListener("DOMContentLoaded", function () {
+  // Elements that might be on the current page
   const quizStart = document.getElementById("quiz-start");
   const question1 = document.getElementById("question-1");
   const question2 = document.getElementById("question-2");
@@ -9,48 +10,36 @@ document.addEventListener("DOMContentLoaded", function () {
   const question6 = document.getElementById("question-6");
   const question7 = document.getElementById("question-7");
   const quizComplete = document.getElementById("quiz-complete");
-  const orchestraPerformance = document.getElementById("orchestra-performance");
 
-  const startQuizBtn = document.getElementById("start-quiz-btn");
-  const hintBtns = document.querySelectorAll(".hint-btn");
-  const hintContents = document.querySelectorAll(".hint-content");
-  const options = document.querySelectorAll(".option");
-  const nextBtns = document.querySelectorAll('[data-action="next"]');
-  const prevBtns = document.querySelectorAll('[data-action="previous"]');
-  const soundBtns = document.querySelectorAll(".sound-button");
-  const feedbacks = document.querySelectorAll(".feedback");
-  const familyInput = document.getElementById("family-input");
+  // Current score (stored in localStorage)
+  let currentScore = localStorage.getItem("quizScore")
+    ? parseFloat(localStorage.getItem("quizScore"))
+    : 10;
+
+  // Update score displays on page load
   const scoreDisplays = document.querySelectorAll(".score-display span");
+  scoreDisplays.forEach((display) => {
+    display.textContent = currentScore.toFixed(1);
+  });
+
+  // Final score on certificate page
   const finalScore = document.getElementById("final-score");
+  if (finalScore) {
+    finalScore.textContent = currentScore.toFixed(1);
+  }
 
-  // Current state
-  let currentScore = 10;
-  let currentQuestion = 0;
-  const questions = [
-    quizStart,
-    question1,
-    question2,
-    question3,
-    question4,
-    question5,
-    question6,
-    question7,
-    quizComplete,
-    orchestraPerformance,
-  ];
-
-  // Track completed connections for sound and name matching
-  const completedSoundConnections = new Set();
-  const completedNameConnections = new Set();
-
-  // Handle start quiz
+  // Handle quiz start button
+  const startQuizBtn = document.getElementById("start-quiz-btn");
   if (startQuizBtn) {
     startQuizBtn.addEventListener("click", () => {
-      showQuestion(1);
+      // Initialize score when starting the quiz
+      localStorage.setItem("quizScore", "10");
+      window.location.href = "/quiz/1";
     });
   }
 
   // Handle hint buttons
+  const hintBtns = document.querySelectorAll(".hint-btn");
   hintBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
       const hintContent = btn
@@ -63,7 +52,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Handle options click
+  // Handle options click for multiple choice questions
+  const options = document.querySelectorAll(".option");
   options.forEach((option) => {
     option.addEventListener("click", () => {
       // Remove selected class from all options in the same question
@@ -72,9 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
       questionOptions.forEach((opt) => {
         opt.classList.remove("selected");
         const checkbox = opt.querySelector(".option-checkbox");
-        if (checkbox) {
-          checkbox.innerHTML = "";
-        }
+        if (checkbox) checkbox.innerHTML = "";
       });
 
       // Add selected class to clicked option
@@ -86,91 +74,79 @@ document.addEventListener("DOMContentLoaded", function () {
         const feedback = parentQuestion.querySelector(".feedback");
         if (feedback) {
           feedback.style.display = "block";
-          if (checkbox) {
-            checkbox.innerHTML = "✗";
-          }
-
-          // Update score (deduct 1 point)
-          currentScore -= 1;
-          updateScores();
+          if (checkbox) checkbox.innerHTML = "✗";
         }
+        // Update score (deduct 0.5 point)
+        currentScore -= 0.5;
+        localStorage.setItem("quizScore", currentScore.toString());
+        updateScores();
       } else {
         // Hide feedback if previously shown
         const feedback = parentQuestion.querySelector(".feedback");
-        if (feedback) {
-          feedback.style.display = "none";
-        }
-        if (checkbox) {
-          checkbox.innerHTML = "✓";
-        }
+        if (feedback) feedback.style.display = "none";
+        if (checkbox) checkbox.innerHTML = "✓";
       }
     });
   });
 
-  // Handle next button
+  // Handle navigation buttons
+  const nextBtns = document.querySelectorAll('[data-action="next"]');
   nextBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
-      const currentQuestionIndex = [...questions].findIndex(
-        (q) => q.style.display !== "none"
-      );
+      // Get current quiz ID from URL
+      const pathParts = window.location.pathname.split("/");
+      const currentQuizId = parseInt(pathParts[pathParts.length - 1]);
 
-      // For question 5, check if an option is selected before proceeding
-      if (currentQuestionIndex === 5) {
-        const selectedOption = question5.querySelector(".option.selected");
-        if (!selectedOption) {
-          alert("Please select an answer before proceeding.");
-          return;
-        }
-      }
-
-      // For question 6, check if all connections are made
-      if (currentQuestionIndex === 6 && completedSoundConnections.size < 3) {
-        alert("Please complete all sound connections before proceeding.");
+      // Validate answers before proceeding
+      if (!validateCurrentQuestion(currentQuizId)) {
         return;
       }
 
-      // For question 7, check if all connections are made
-      if (currentQuestionIndex === 7 && completedNameConnections.size < 3) {
-        alert("Please connect all names to instruments before proceeding.");
-        return;
+      // Navigate to next question or certificate
+      if (currentQuizId === 7) {
+        window.location.href = "/quiz/8"; // Go to certificate
+      } else {
+        window.location.href = `/quiz/${currentQuizId + 1}`;
       }
-
-      showQuestion(currentQuestionIndex + 1);
     });
   });
 
-  // Handle previous button
+  const prevBtns = document.querySelectorAll('[data-action="previous"]');
   prevBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
-      const currentQuestionIndex = [...questions].findIndex(
-        (q) => q.style.display !== "none"
-      );
-      showQuestion(currentQuestionIndex - 1);
+      // Get current quiz ID from URL
+      const pathParts = window.location.pathname.split("/");
+      const currentQuizId = parseInt(pathParts[pathParts.length - 1]);
+
+      // Navigate to previous question
+      if (currentQuizId > 1) {
+        window.location.href = `/quiz/${currentQuizId - 1}`;
+      } else {
+        window.location.href = "/quiz";
+      }
     });
   });
 
   // Handle sound buttons
+  const soundBtns = document.querySelectorAll(".sound-button");
   soundBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
-      // Get data-sound attribute or assign a default sound
       const soundType = btn.getAttribute("data-sound") || "default";
       playSound(soundType);
 
-      // Highlight the button that was clicked for questions 5, 6, and 7
-      if (btn.closest("#question-5, #question-6, #question-7")) {
-        // Remove active class from all sound buttons in this container
+      // Highlight active sound button
+      if (btn.closest(".quiz-container")) {
         const container = btn.closest(".quiz-container");
         container.querySelectorAll(".sound-button").forEach((button) => {
           button.classList.remove("active");
         });
-
-        // Add active class to the clicked button
         btn.classList.add("active");
       }
     });
   });
 
-  // Handle family input (for question 4)
+  // Handle text input questions (like question 4)
+  const familyInput = document.getElementById("family-input");
   if (familyInput) {
     familyInput.addEventListener("keyup", (e) => {
       if (e.key === "Enter") {
@@ -179,29 +155,113 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (answer === "percussion") {
           // Correct answer
-          if (feedback) {
-            feedback.style.display = "none";
-          }
+          if (feedback) feedback.style.display = "none";
         } else {
           // Wrong answer
-          if (feedback) {
-            feedback.style.display = "block";
-          }
-          currentScore -= 1;
+          if (feedback) feedback.style.display = "block";
+          currentScore -= 0.5;
+          localStorage.setItem("quizScore", currentScore.toString());
           updateScores();
         }
       }
     });
   }
 
-  // Handle drag and drop
-  initDragAndDrop();
+  // Initialize drag and drop functionality if present on page
+  if (document.querySelector(".draggable")) {
+    initDragAndDrop();
+  }
 
-  // Handle connection lines for sound matching (Question 6)
-  initSoundMatching();
+  // Initialize sound matching if present on page
+  if (document.querySelector(".sound-source")) {
+    initSoundMatching();
+  }
 
-  // Handle name to image connections (Question 7)
-  initNameMatching();
+  // Initialize name matching if present on page
+  if (document.querySelector(".name-tag")) {
+    initNameMatching();
+  }
+
+  // Function to validate current question
+  function validateCurrentQuestion(questionId) {
+    switch (questionId) {
+      case 1:
+      case 2:
+      case 5:
+        // Multiple choice questions
+        const selectedOption = document.querySelector(`.option.selected`);
+        if (!selectedOption) {
+          alert("Please select an answer before proceeding.");
+          return false;
+        }
+        return true;
+
+      case 3:
+        // Drag and drop question
+        const dropZones = document.querySelectorAll(".drop-zone");
+        const draggables = document.querySelectorAll(".draggable");
+        let allPlaced = true;
+
+        // Check if all draggable items are placed in drop zones
+        draggables.forEach((draggable) => {
+          if (!draggable.parentElement.classList.contains("drop-zone")) {
+            allPlaced = false;
+          }
+        });
+
+        if (!allPlaced) {
+          alert(
+            "Please place all instruments in their correct families before proceeding."
+          );
+          return false;
+        }
+        return true;
+
+      case 4:
+        // Text input question
+        const textInput = document.getElementById("family-input");
+        if (textInput && textInput.value.trim() === "") {
+          alert("Please enter an answer before proceeding.");
+          return false;
+        }
+        return true;
+
+      case 6:
+        // Sound matching question
+        const soundConnections = document.querySelectorAll(
+          ".sound-connection.complete"
+        );
+        if (soundConnections.length < 3) {
+          alert("Please complete all sound connections before proceeding.");
+          return false;
+        }
+        return true;
+
+      case 7:
+        // Name matching question
+        const nameConnections = document.querySelectorAll(
+          ".name-connection.complete"
+        );
+        if (nameConnections.length < 3) {
+          alert("Please connect all names to instruments before proceeding.");
+          return false;
+        }
+        return true;
+
+      default:
+        return true;
+    }
+  }
+
+  // Function to update all score displays
+  function updateScores() {
+    scoreDisplays.forEach((display) => {
+      display.textContent = currentScore.toFixed(1);
+    });
+    if (finalScore) {
+      finalScore.textContent = currentScore.toFixed(1);
+    }
+  }
 
   // Function to play sound (placeholder)
   function playSound(soundType) {
@@ -212,31 +272,7 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   }
 
-  // Function to show a specific question
-  function showQuestion(index) {
-    // Hide all questions
-    questions.forEach((q) => {
-      if (q) q.style.display = "none";
-    });
-
-    // Show the requested question
-    if (index >= 0 && index < questions.length && questions[index]) {
-      questions[index].style.display = "block";
-      currentQuestion = index;
-    }
-  }
-
-  // Function to update all score displays
-  function updateScores() {
-    scoreDisplays.forEach((display) => {
-      display.textContent = currentScore;
-    });
-    if (finalScore) {
-      finalScore.textContent = currentScore;
-    }
-  }
-
-  // Initialize drag and drop functionality
+  // Keep the existing implementations of these functions
   function initDragAndDrop() {
     const draggables = document.querySelectorAll(".draggable");
     const dropZones = document.querySelectorAll(".drop-zone");
@@ -284,13 +320,13 @@ document.addEventListener("DOMContentLoaded", function () {
           // Wrong drop
           document.getElementById("feedback-3").style.display = "block";
           currentScore -= 0.5;
+          localStorage.setItem("quizScore", currentScore.toString());
           updateScores();
         }
       });
     });
   }
 
-  // Initialize sound matching for Question 6
   function initSoundMatching() {
     const soundButtons = document.querySelectorAll(
       "#question-6 .sound-button[data-sound]"
@@ -364,13 +400,13 @@ document.addEventListener("DOMContentLoaded", function () {
           // Wrong match
           alert("That's not the correct match. Try again!");
           currentScore -= 0.5;
+          localStorage.setItem("quizScore", currentScore.toString());
           updateScores();
         }
       });
     });
   }
 
-  // Initialize name matching for Question 7
   function initNameMatching() {
     const nameItems = document.querySelectorAll("#question-7 .name-item");
     const instrumentItems = document.querySelectorAll(
@@ -442,13 +478,13 @@ document.addEventListener("DOMContentLoaded", function () {
           // Wrong match
           alert("That's not the correct match. Try again!");
           currentScore -= 0.5;
+          localStorage.setItem("quizScore", currentScore.toString());
           updateScores();
         }
       });
     });
   }
 
-  // Function to draw connection lines between elements
   function drawConnectionLine(from, to, container) {
     if (!from || !to || !container) return;
 
@@ -483,56 +519,4 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add line to container
     container.appendChild(line);
   }
-
-  // Display summary modal for Question 5
-  const summaryLinks = document.querySelectorAll(".summary-link");
-  summaryLinks.forEach((link) => {
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-      alert(
-        "Summary: In this excerpt, the violin is providing the main melodic line. The violin's distinctive timbre and expressiveness make it well-suited for lyrical melodies in orchestral music."
-      );
-    });
-  });
-
-  // Initialize the quiz
-  function initQuiz() {
-    showQuestion(0);
-    updateScores();
-
-    // Initially disable next buttons for connection questions until all connections are made
-    const q6NextBtn = document.querySelector(
-      "#question-6 [data-action='next']"
-    );
-    const q7NextBtn = document.querySelector(
-      "#question-7 [data-action='next']"
-    );
-
-    if (q6NextBtn) q6NextBtn.disabled = false; // Will be checked on click
-    if (q7NextBtn) q7NextBtn.disabled = false; // Will be checked on click
-  }
-
-  // Add specific CSS for connected elements
-  const style = document.createElement("style");
-  style.textContent = `
-    .connection-line {
-      position: absolute;
-      height: 2px;
-      background-color: #8b4513;
-      transform-origin: left center;
-    }
-    .connected {
-      opacity: 0.7;
-      border: 2px solid #8b4513;
-    }
-    .sound-button.active, .name-item.active {
-      background-color: #daa520;
-      color: #fff;
-      font-weight: bold;
-    }
-  `;
-  document.head.appendChild(style);
-
-  // Start the quiz
-  initQuiz();
 });
