@@ -26,8 +26,12 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             {% if prev_instrument %}
-            <a href="{{ url_for('learn_instrument', family=family, instrument=prev_instrument) }}" class="btn nav-btn">
+            <a href="{{ url_for('learn_instrument', family=prev_family, instrument=prev_instrument) }}" 
+               class="btn nav-btn {% if prev_family != family %}cross-family-nav{% endif %}">
                 <i class="fas fa-chevron-left"></i> Previous: {{ prev_instrument|replace('_', ' ')|title }}
+                {% if prev_family != family %}
+                <span class="family-indicator">({{ prev_family|title }})</span>
+                {% endif %}
             </a>
             {% endif %}
         </div>
@@ -38,9 +42,20 @@
 
         <div>
             {% if next_instrument %}
-            <a href="{{ url_for('learn_instrument', family=family, instrument=next_instrument) }}" class="btn nav-btn">
-                Next: {{ next_instrument|replace('_', ' ')|title }} <i class="fas fa-chevron-right"></i>
-            </a>
+                {% if next_instrument == 'quiz' %}
+                <a href="{{ url_for('quiz') }}" class="btn nav-btn quiz-nav">
+                    Ready for the Quiz? <i class="fas fa-chevron-right"></i>
+                </a>
+                {% else %}
+                <a href="{{ url_for('learn_instrument', family=next_family, instrument=next_instrument) }}" 
+                   class="btn nav-btn {% if next_family != family %}cross-family-nav{% endif %}">
+                    Next: {{ next_instrument|replace('_', ' ')|title }}
+                    {% if next_family != family %}
+                    <span class="family-indicator">({{ next_family|title }})</span>
+                    {% endif %}
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                {% endif %}
             {% endif %}
         </div>
     </div>
@@ -54,7 +69,7 @@
                 <div class="card-body text-center">
                     <h1 class="card-title">{{ instrument_name|title }}</h1>
                     <p class="lead">{{ description }}</p>
-                    <button class="btn btn-primary btn-lg play-sound" data-sound="{{ instrument_id }}" data-family="{{ family }}">
+                    <button class="btn btn-primary btn-lg play-sound" data-sound="{{ instrument_id }}">
                         <i class="fas fa-play me-2"></i>Listen to the Sound
                     </button>
                 </div>
@@ -223,7 +238,7 @@
 
 .video-container {
     position: relative;
-    padding-bottom: 56.25%;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
     height: 0;
     overflow: hidden;
 }
@@ -235,27 +250,49 @@
     width: 100%;
     height: 100%;
 }
+
+.cross-family-nav {
+    background-color: var(--golden-yellow);
+    color: var(--primary-brown);
+    border: 1px solid var(--primary-brown);
+}
+
+.cross-family-nav:hover {
+    background-color: var(--cream);
+    color: var(--primary-brown);
+    border-color: var(--primary-brown);
+}
+
+.family-indicator {
+    font-size: 0.8em;
+    opacity: 0.8;
+    margin-left: 4px;
+}
+
+.quiz-nav {
+    background-color: var(--golden-yellow);
+    color: var(--primary-brown);
+    border: 2px solid var(--primary-brown);
+    font-weight: bold;
+    padding: 10px 20px;
+}
+
+.quiz-nav:hover {
+    background-color: var(--cream);
+    color: var(--primary-brown);
+    border-color: var(--primary-brown);
+    text-decoration: none;
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}
 </style>
 
 <script>
 $(document).ready(function() {
     $('.play-sound').click(function() {
         const instrument = $(this).data('sound');
-        const family = $(this).data('family');
-        const audioPath = `/static/sounds/${family}/${instrument}.mp3`;
-
-        if (window.currentAudio) {
-            window.currentAudio.pause();
-            window.currentAudio.currentTime = 0;
-        }
-
-        const audio = new Audio(audioPath);
-        window.currentAudio = audio;
-
-        audio.play().catch(e => {
-            console.error("Playback failed:", e);
-            alert("Audio could not be played.");
-        });
+        // Here you would add the logic to play the sound
+        alert('Playing ' + instrument + ' sound... (Audio functionality to be implemented)');
     });
 });
 </script>

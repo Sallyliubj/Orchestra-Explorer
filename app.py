@@ -13,27 +13,50 @@ INSTRUMENTS_BY_FAMILY = {
     'percussion': ['timpani', 'snare', 'bassdrum', 'xylophone']
 }
 
+# Define the order of families for cross-family navigation
+FAMILY_ORDER = ['strings', 'woodwinds', 'brass', 'percussion']
+
 def get_next_instrument(family, current_instrument):
     if family not in INSTRUMENTS_BY_FAMILY:
-        return None
+        return None, None
+    
     instruments = INSTRUMENTS_BY_FAMILY[family]
     try:
         current_index = instruments.index(current_instrument)
-        next_index = (current_index + 1) % len(instruments)
-        return instruments[next_index]
+        if current_index == len(instruments) - 1:
+            # If this is the last instrument in the family
+            if family == FAMILY_ORDER[-1]:  # If this is the last family (percussion)
+                # Return special values to indicate quiz navigation
+                return 'quiz', 'quiz'
+            else:
+                # Move to the first instrument of the next family
+                next_family_index = (FAMILY_ORDER.index(family) + 1) % len(FAMILY_ORDER)
+                next_family = FAMILY_ORDER[next_family_index]
+                return INSTRUMENTS_BY_FAMILY[next_family][0], next_family
+        else:
+            # Stay within the same family
+            return instruments[current_index + 1], family
     except ValueError:
-        return None
+        return None, None
 
 def get_previous_instrument(family, current_instrument):
     if family not in INSTRUMENTS_BY_FAMILY:
-        return None
+        return None, None
+    
     instruments = INSTRUMENTS_BY_FAMILY[family]
     try:
         current_index = instruments.index(current_instrument)
-        prev_index = (current_index - 1) % len(instruments)
-        return instruments[prev_index]
+        if current_index == 0:
+            # If this is the first instrument in the family, move to the last instrument of the previous family
+            prev_family_index = (FAMILY_ORDER.index(family) - 1) % len(FAMILY_ORDER)
+            prev_family = FAMILY_ORDER[prev_family_index]
+            prev_instruments = INSTRUMENTS_BY_FAMILY[prev_family]
+            return prev_instruments[-1], prev_family
+        else:
+            # Stay within the same family
+            return instruments[current_index - 1], family
     except ValueError:
-        return None
+        return None, None
 
 @app.route('/')
 def home():
@@ -94,13 +117,15 @@ def learn_instrument(family, instrument):
     
     log_interaction(f"Visited {instrument.replace('_', ' ').title()} Page in {family.title()} Family")
 
-    next_instrument = get_next_instrument(family, instrument)
-    prev_instrument = get_previous_instrument(family, instrument)
+    next_instrument, next_family = get_next_instrument(family, instrument)
+    prev_instrument, prev_family = get_previous_instrument(family, instrument)
 
     try:
         return render_template(f'learn/instruments/{family}/{instrument}.html',
                              next_instrument=next_instrument,
-                             prev_instrument=prev_instrument)
+                             next_family=next_family,
+                             prev_instrument=prev_instrument,
+                             prev_family=prev_family)
     except:
         return render_template('learn/instruments/coming_soon.html', 
                              family=family, 
