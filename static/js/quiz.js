@@ -527,11 +527,118 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Function to play sound (placeholder)
   function playSound(soundType) {
-    console.log(`Playing sound: ${soundType}`);
-    // In a real implementation, this would play actual audio files
-    alert(
-      `This would play the ${soundType} sound in the actual implementation`
-    );
+    // Get the current quiz question from URL
+    const pathParts = window.location.pathname.split("/");
+    const currentQuizId = parseInt(pathParts[pathParts.length - 1]) || 0;
+    let soundFile = null;
+
+    // Handle specific question types
+    if (currentQuizId === 1) {
+      // Question 1: Instrument family identification
+      if (soundType === "default") {
+        // Play all three sounds sequentially
+        playInstrumentSound("strings/violin.mp3");
+        setTimeout(() => playInstrumentSound("strings/cello.mp3"), 1500);
+        setTimeout(() => playInstrumentSound("brass/trumpet.mp3"), 3000);
+        return;
+      } else if (soundType === "violin") {
+        soundFile = "strings/violin.mp3";
+      } else if (soundType === "cello") {
+        soundFile = "strings/cello.mp3";
+      } else if (soundType === "trumpet") {
+        soundFile = "brass/trumpet.mp3";
+      }
+    } else if (currentQuizId === 2) {
+      // Question 2: Sound matching
+      if (soundType === "default") {
+        soundFile = "strings/violin.mp3";
+      } else if (soundType) {
+        // Handle specific instrument
+        if (soundType === "timpani") {
+          soundFile = "percussion/timpani.mp3";
+        } else if (soundType === "violin") {
+          soundFile = "strings/violin.mp3";
+        } else if (soundType === "trumpet") {
+          soundFile = "brass/trumpet.mp3";
+        } else if (soundType === "clarinet") {
+          soundFile = "woodwinds/clarinet.mp3";
+        }
+      }
+    } else if (currentQuizId === 3) {
+      // Question 3: Drag and drop (instrument sorting)
+      if (soundType && soundType.includes("/")) {
+        // Direct sound file path provided
+        soundFile = soundType;
+      } else {
+        // Map the instrument category to a sample sound
+        const familySoundMap = {
+          strings: "strings/violin.mp3",
+          woodwinds: "woodwinds/flute.mp3",
+          brass: "brass/trumpet.mp3",
+          percussion: "percussion/timpani.mp3",
+        };
+        soundFile = familySoundMap[soundType] || null;
+      }
+    } else if (currentQuizId === 4) {
+      // Question 4: Identify instrument family by sound
+      soundFile = "percussion/timpani.mp3";
+    } else if (currentQuizId === 5) {
+      // Question 5: Identify the instrument
+      if (soundType === "default") {
+        soundFile = "woodwinds/oboe.mp3";
+      } else {
+        // Map specific instruments
+        const instrumentSoundMap = {
+          flute: "woodwinds/flute.mp3",
+          oboe: "woodwinds/oboe.mp3",
+          clarinet: "woodwinds/clarinet.mp3",
+          violin: "strings/violin.mp3",
+        };
+        soundFile = instrumentSoundMap[soundType] || null;
+      }
+    } else if (currentQuizId === 6) {
+      // Question 6: Match sounds to instruments
+      // Handle direct instrument sound mappings
+      if (soundType === "trumpet") {
+        soundFile = "brass/trumpet.mp3";
+      } else if (soundType === "violin") {
+        soundFile = "strings/violin.mp3";
+      } else if (soundType === "cello") {
+        soundFile = "strings/cello.mp3";
+      } else if (soundType === "bass") {
+        soundFile = "strings/bass.mp3";
+      } else if (soundType === "flute") {
+        soundFile = "woodwinds/flute.mp3";
+      } else if (soundType === "timpani") {
+        soundFile = "percussion/timpani.mp3";
+      }
+    } else if (currentQuizId === 7) {
+      // Question 7: Identify orchestra sections
+      if (soundType === "strings") {
+        soundFile = "strings/violin.mp3";
+      } else if (soundType === "woodwinds") {
+        soundFile = "woodwinds/flute.mp3";
+      } else if (soundType === "brass") {
+        soundFile = "brass/trumpet.mp3";
+      } else if (soundType === "percussion") {
+        soundFile = "percussion/timpani.mp3";
+      }
+    }
+
+    // Play the sound if we have a valid sound file
+    if (soundFile) {
+      playInstrumentSound(soundFile);
+    } else {
+      console.error(`No sound file found for type: ${soundType}`);
+    }
+  }
+
+  // Helper function to play actual instrument sounds
+  function playInstrumentSound(soundPath) {
+    const audio = new Audio(`/static/sounds/${soundPath}`);
+    audio.play().catch((error) => {
+      console.error(`Error playing sound: ${error.message}`);
+    });
   }
 
   // Keep the existing implementations of these functions
