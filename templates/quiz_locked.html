@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Locked{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-lock fa-4x mb-4 text-muted"></i>
+                        <h2 class="card-title mb-4">Quiz is Locked</h2>
+                        <p class="card-text mb-4">
+                            You need to complete all the learning lessons before taking the quiz.
+                            This ensures you have the necessary knowledge to succeed!
+                        </p>
+                        <a href="{{ url_for('learn_overview') }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-book me-2"></i>Continue Learning
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
