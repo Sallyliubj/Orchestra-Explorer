@@ -15,32 +15,81 @@ document.addEventListener("DOMContentLoaded", function () {
   const pathParts = window.location.pathname.split("/");
   const currentQuizId = parseInt(pathParts[pathParts.length - 1]) || 0;
 
-  // Current score (stored in localStorage)
-  let currentScore = localStorage.getItem("quizScore")
-    ? parseFloat(localStorage.getItem("quizScore"))
-    : 10;
+  // Initialize score and attempts tracking
+  let currentScore = localStorage.getItem("quizScore") ? parseInt(localStorage.getItem("quizScore")) : 0;
+  let attempts = localStorage.getItem(`quiz_${currentQuizId}_attempts`) ? parseInt(localStorage.getItem(`quiz_${currentQuizId}_attempts`)) : 0;
+  let questionAnswered = localStorage.getItem(`quiz_${currentQuizId}_answered`) ? localStorage.getItem(`quiz_${currentQuizId}_answered`) === 'true' : false;
 
-  // Update score displays on page load
-  const scoreDisplays = document.querySelectorAll(".score-display span");
-  scoreDisplays.forEach((display) => {
-    display.textContent = currentScore.toFixed(1);
-  });
+  // Show score displays during quiz
+  const scoreDisplays = document.querySelectorAll(".score-display");
+  const totalQuestions = 7; // Total number of questions in the quiz
+  
+  // Create and update attempt counter
+  function createAttemptCounter() {
+    const quizContainer = document.querySelector('.quiz-container');
+    if (!quizContainer) return;
 
-  // Final score on certificate page
+    // Remove existing attempt counter if any
+    const existingCounter = document.getElementById('attempt-counter');
+    if (existingCounter) {
+      existingCounter.remove();
+    }
+
+    // Create new attempt counter
+    const attemptCounter = document.createElement('div');
+    attemptCounter.id = 'attempt-counter';
+    attemptCounter.style.cssText = `
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #f0f0f0;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 14px;
+      color: #333;
+    `;
+    attemptCounter.textContent = `Attempts: ${attempts}/3`;
+    quizContainer.style.position = 'relative';
+    quizContainer.appendChild(attemptCounter);
+  }
+
+  // Update attempt counter
+  function updateAttemptCounter() {
+    const attemptCounter = document.getElementById('attempt-counter');
+    if (attemptCounter) {
+      attemptCounter.textContent = `Attempts: ${attempts}/3`;
+    }
+  }
+  
+  // Update all score displays
+  function updateScoreDisplays() {
+    scoreDisplays.forEach((display) => {
+      display.style.display = "block";
+      display.textContent = `Score: ${currentScore}/${totalQuestions}`;
+    });
+  }
+
+  // Initial score display update and attempt counter creation
+  updateScoreDisplays();
+  createAttemptCounter();
+
+  // Show final score on certificate page
   const finalScore = document.getElementById("final-score");
   if (finalScore) {
-    finalScore.textContent = currentScore.toFixed(1);
+    finalScore.textContent = `${currentScore}/${totalQuestions}`;
   }
 
   // Handle quiz start button
   const startQuizBtn = document.getElementById("start-quiz-btn");
   if (startQuizBtn) {
     startQuizBtn.addEventListener("click", () => {
-      // Initialize score when starting the quiz
-      localStorage.setItem("quizScore", "10");
-      // Clear previous quiz progress
+      // Initialize score and attempts when starting the quiz
+      localStorage.setItem("quizScore", "0");
+      // Clear previous quiz progress and attempts
       for (let i = 1; i <= 7; i++) {
         localStorage.removeItem(`quiz_${i}_state`);
+        localStorage.removeItem(`quiz_${i}_attempts`);
+        localStorage.removeItem(`quiz_${i}_answered`);
       }
       window.location.href = "/quiz/1";
     });
@@ -63,10 +112,28 @@ document.addEventListener("DOMContentLoaded", function () {
   // Restore state for the current question
   restoreQuizState(currentQuizId);
 
+  // Function to update score (ensures score is never negative)
+  function updateScore(points) {
+    currentScore = Math.max(0, currentScore + points);
+    localStorage.setItem("quizScore", currentScore.toString());
+  }
+
   // Handle options click for multiple choice questions
   const options = document.querySelectorAll(".option");
   options.forEach((option) => {
     option.addEventListener("click", () => {
+      // Skip if question already answered correctly
+      if (questionAnswered) {
+        return;
+      }
+
+      // Check if max attempts reached
+      if (attempts >= 3) {
+        alert("Maximum attempts reached. Moving to next question.");
+        window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+        return;
+      }
+
       // Remove selected class from all options in the same question
       const parentQuestion = option.closest(".quiz-container");
       const questionOptions = parentQuestion.querySelectorAll(".option");
@@ -84,25 +151,44 @@ document.addEventListener("DOMContentLoaded", function () {
       const allFeedback = parentQuestion.querySelectorAll(".feedback");
       allFeedback.forEach((f) => (f.style.display = "none"));
 
+      // Increment attempts
+      attempts++;
+      localStorage.setItem(`quiz_${currentQuizId}_attempts`, attempts.toString());
+      updateAttemptCounter();
+
       // If it's a wrong answer, show error feedback
       if (!option.hasAttribute("data-correct")) {
-        const errorFeedback = parentQuestion.querySelector(
-          ".feedback:not(.success)"
-        );
+        const errorFeedback = parentQuestion.querySelector(".feedback:not(.success)");
         if (errorFeedback) {
           errorFeedback.style.display = "block";
           if (checkbox) checkbox.innerHTML = "✗";
         }
-        // Update score (deduct 0.5 point)
-        currentScore -= 0.5;
-        localStorage.setItem("quizScore", currentScore.toString());
-        updateScores();
+        
+        // Check if max attempts reached
+        if (attempts >= 3) {
+          alert("Maximum attempts reached. Moving to next question.");
+          setTimeout(() => {
+            window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+          }, 1000);
+        }
       } else {
         // Show success feedback
-        const successFeedback =
-          parentQuestion.querySelector(".feedback.success");
+        const successFeedback = parentQuestion.querySelector(".feedback.success");
         if (successFeedback) successFeedback.style.display = "block";
         if (checkbox) checkbox.innerHTML = "✓";
+        
+        // Add point for correct answer
+        currentScore += 1;
+        localStorage.setItem("quizScore", currentScore.toString());
+        localStorage.setItem(`quiz_${currentQuizId}_answered`, 'true');
+        
+        // Update score display
+        updateScoreDisplays();
+        
+        // Move to next question after short delay
+        setTimeout(() => {
+          window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+        }, 1000);
       }
 
       // Save the state of the current question
@@ -176,6 +262,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Function to check the answer
       const checkAnswer = () => {
+        // Skip if max attempts reached or question already answered
+        if (attempts >= 3 || questionAnswered) {
+          return;
+        }
+
         const answer = familyInput.value.trim().toLowerCase();
         const errorFeedback = document.getElementById("feedback-4");
         const successFeedback = document.getElementById("success-4");
@@ -188,13 +279,33 @@ document.addEventListener("DOMContentLoaded", function () {
           // Correct answer
           if (successFeedback) successFeedback.style.display = "block";
           familyInput.dataset.correct = "true";
-        } else {
-          // Wrong answer
-          if (errorFeedback) errorFeedback.style.display = "block";
-          currentScore -= 0.5;
+          // Add point for correct answer
+          currentScore += 1;
           localStorage.setItem("quizScore", currentScore.toString());
-          updateScores();
+          localStorage.setItem(`quiz_${currentQuizId}_answered`, 'true');
+          // Update score display
+          updateScoreDisplays();
+          // Move to next question after short delay
+          setTimeout(() => {
+            window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+          }, 1000);
+        } else {
+          // Wrong answer - only increment attempts for incorrect submissions
+          if (errorFeedback) errorFeedback.style.display = "block";
           familyInput.dataset.correct = "false";
+          
+          // Increment attempts only for incorrect submissions
+          attempts++;
+          localStorage.setItem(`quiz_${currentQuizId}_attempts`, attempts.toString());
+          updateAttemptCounter();
+          
+          // Check if max attempts reached
+          if (attempts >= 3) {
+            alert("Maximum attempts reached. Moving to next question.");
+            setTimeout(() => {
+              window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+            }, 1000);
+          }
         }
 
         // Save the state
@@ -404,6 +515,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Function to validate current question
   function validateCurrentQuestion(questionId) {
+    // Skip validation if question already answered correctly
+    if (questionAnswered) {
+      return true;
+    }
+
+    // Check if max attempts reached
+    if (attempts >= 3) {
+      return true; // Allow proceeding if max attempts reached
+    }
+
     switch (questionId) {
       case 1:
       case 2:
@@ -430,9 +551,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         if (!allPlaced) {
-          alert(
-            "Please place all instruments in their correct families before proceeding."
-          );
+          alert("Please place all instruments in their correct families before proceeding.");
           return false;
         }
         return true;
@@ -463,18 +582,31 @@ document.addEventListener("DOMContentLoaded", function () {
             // Correct answer
             if (successFeedback) successFeedback.style.display = "block";
             textInput.dataset.correct = "true";
+            // Add point for correct answer
+            currentScore += 1;
+            localStorage.setItem("quizScore", currentScore.toString());
+            localStorage.setItem(`quiz_${currentQuizId}_answered`, 'true');
+            // Update score display
+            updateScoreDisplays();
             // Save state after validation
             saveQuizState(questionId);
             return true;
           } else {
-            // Wrong answer
+            // Wrong answer - only increment attempts for incorrect submissions
             if (errorFeedback) errorFeedback.style.display = "block";
-            currentScore -= 0.5;
-            localStorage.setItem("quizScore", currentScore.toString());
-            updateScores();
             textInput.dataset.correct = "false";
-            // Save state after validation
-            saveQuizState(questionId);
+            
+            // Increment attempts only for incorrect submissions
+            attempts++;
+            localStorage.setItem(`quiz_${currentQuizId}_attempts`, attempts.toString());
+            updateAttemptCounter();
+            
+            // Check if max attempts reached
+            if (attempts >= 3) {
+              alert("Maximum attempts reached. Moving to next question.");
+              return true;
+            }
+            
             alert("Please enter the correct answer before proceeding.");
             return false;
           }
@@ -490,9 +622,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       case 6:
         // Sound matching question
-        const soundConnections = document.querySelectorAll(
-          ".sound-button.connected"
-        );
+        const soundConnections = document.querySelectorAll(".sound-button.connected");
         if (soundConnections.length < 3) {
           alert("Please complete all sound connections before proceeding.");
           return false;
@@ -501,9 +631,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       case 7:
         // Name matching question
-        const nameConnections = document.querySelectorAll(
-          ".name-item.connected"
-        );
+        const nameConnections = document.querySelectorAll(".name-item.connected");
         if (nameConnections.length < 3) {
           alert("Please connect all names to instruments before proceeding.");
           return false;
@@ -521,7 +649,7 @@ document.addEventListener("DOMContentLoaded", function () {
       display.textContent = currentScore.toFixed(1);
     });
     if (finalScore) {
-      finalScore.textContent = currentScore.toFixed(1);
+      finalScore.textContent = Math.max(0, currentScore).toFixed(1);
     }
   }
 
@@ -652,6 +780,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     draggables.forEach((draggable) => {
       draggable.addEventListener("dragstart", function (e) {
+        // Skip if max attempts reached or question already answered
+        if (attempts >= 3 || questionAnswered) {
+          e.preventDefault();
+          return;
+        }
         this.classList.add("dragging");
         e.dataTransfer.setData("text/plain", this.dataset.category);
       });
@@ -668,6 +801,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     dropZones.forEach((dropZone) => {
       dropZone.addEventListener("dragover", function (e) {
+        // Skip if max attempts reached or question already answered
+        if (attempts >= 3 || questionAnswered) {
+          e.preventDefault();
+          return;
+        }
         e.preventDefault();
         this.classList.add("drag-over");
       });
@@ -677,6 +815,12 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       dropZone.addEventListener("drop", function (e) {
+        // Skip if max attempts reached or question already answered
+        if (attempts >= 3 || questionAnswered) {
+          e.preventDefault();
+          return;
+        }
+
         e.preventDefault();
         this.classList.remove("drag-over");
 
@@ -705,15 +849,35 @@ document.addEventListener("DOMContentLoaded", function () {
           });
 
           // Show success feedback if all correct
-          if (allCorrect && successFeedback) {
-            successFeedback.style.display = "block";
+          if (allCorrect) {
+            if (successFeedback) successFeedback.style.display = "block";
+            // Add point for correct answer
+            currentScore += 1;
+            localStorage.setItem("quizScore", currentScore.toString());
+            localStorage.setItem(`quiz_${currentQuizId}_answered`, 'true');
+            // Update score display
+            updateScoreDisplays();
+            // Move to next question after short delay
+            setTimeout(() => {
+              window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+            }, 1000);
           }
         } else {
-          // Wrong drop
+          // Wrong drop - only increment attempts for incorrect placements
           if (errorFeedback) errorFeedback.style.display = "block";
-          currentScore -= 0.5;
-          localStorage.setItem("quizScore", currentScore.toString());
-          updateScores();
+          
+          // Increment attempts only for incorrect placements
+          attempts++;
+          localStorage.setItem(`quiz_${currentQuizId}_attempts`, attempts.toString());
+          updateAttemptCounter();
+          
+          // Check if max attempts reached
+          if (attempts >= 3) {
+            alert("Maximum attempts reached. Moving to next question.");
+            setTimeout(() => {
+              window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+            }, 1000);
+          }
         }
 
         // Save state after drop
@@ -787,6 +951,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add click events to sound buttons
     soundButtons.forEach((btn) => {
       btn.addEventListener("click", function () {
+        // Skip if max attempts reached or question already answered
+        if (attempts >= 3 || questionAnswered) {
+          return;
+        }
         selectedSound = this.dataset.sound;
         soundButtons.forEach((b) => b.classList.remove("active"));
         this.classList.add("active");
@@ -796,6 +964,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add click events to instrument items
     instrumentItems.forEach((item) => {
       item.addEventListener("click", function () {
+        // Skip if max attempts reached or question already answered
+        if (attempts >= 3 || questionAnswered) {
+          return;
+        }
+
         if (!selectedSound) {
           alert("Please select a sound first by clicking 'Play Sound'");
           return;
@@ -840,16 +1013,36 @@ document.addEventListener("DOMContentLoaded", function () {
           if (completedSoundConnections.size === 3) {
             // All connections made, show success feedback
             if (successFeedback) successFeedback.style.display = "block";
+            // Add point for correct answer
+            currentScore += 1;
+            localStorage.setItem("quizScore", currentScore.toString());
+            localStorage.setItem(`quiz_${currentQuizId}_answered`, 'true');
+            // Update score display
+            updateScoreDisplays();
+            // Move to next question after short delay
+            setTimeout(() => {
+              window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+            }, 1000);
           }
 
           // Save state after successful connection
           saveQuizState(currentQuizId);
         } else {
-          // Wrong match
+          // Wrong match - only increment attempts for incorrect connections
           if (errorFeedback) errorFeedback.style.display = "block";
-          currentScore -= 0.5;
-          localStorage.setItem("quizScore", currentScore.toString());
-          updateScores();
+          
+          // Increment attempts only for incorrect connections
+          attempts++;
+          localStorage.setItem(`quiz_${currentQuizId}_attempts`, attempts.toString());
+          updateAttemptCounter();
+          
+          // Check if max attempts reached
+          if (attempts >= 3) {
+            alert("Maximum attempts reached. Moving to next question.");
+            setTimeout(() => {
+              window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+            }, 1000);
+          }
 
           // Save state after unsuccessful attempt
           saveQuizState(currentQuizId);
@@ -918,6 +1111,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add click events to name items
     nameItems.forEach((item) => {
       item.addEventListener("click", function () {
+        // Skip if max attempts reached or question already answered
+        if (attempts >= 3 || questionAnswered) {
+          return;
+        }
         nameItems.forEach((i) => i.classList.remove("active"));
         this.classList.add("active");
         selectedName = this.dataset.name;
@@ -927,6 +1124,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add click events to instrument items
     instrumentItems.forEach((item) => {
       item.addEventListener("click", function () {
+        // Skip if max attempts reached or question already answered
+        if (attempts >= 3 || questionAnswered) {
+          return;
+        }
+
         if (!selectedName) {
           alert("Please select a name first");
           return;
@@ -970,16 +1172,36 @@ document.addEventListener("DOMContentLoaded", function () {
           if (completedNameConnections.size === 3) {
             // All connections made, show success feedback
             if (successFeedback) successFeedback.style.display = "block";
+            // Add point for correct answer
+            currentScore += 1;
+            localStorage.setItem("quizScore", currentScore.toString());
+            localStorage.setItem(`quiz_${currentQuizId}_answered`, 'true');
+            // Update score display
+            updateScoreDisplays();
+            // Move to next question after short delay
+            setTimeout(() => {
+              window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+            }, 1000);
           }
 
           // Save state after successful connection
           saveQuizState(currentQuizId);
         } else {
-          // Wrong match
+          // Wrong match - only increment attempts for incorrect connections
           if (errorFeedback) errorFeedback.style.display = "block";
-          currentScore -= 0.5;
-          localStorage.setItem("quizScore", currentScore.toString());
-          updateScores();
+          
+          // Increment attempts only for incorrect connections
+          attempts++;
+          localStorage.setItem(`quiz_${currentQuizId}_attempts`, attempts.toString());
+          updateAttemptCounter();
+          
+          // Check if max attempts reached
+          if (attempts >= 3) {
+            alert("Maximum attempts reached. Moving to next question.");
+            setTimeout(() => {
+              window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+            }, 1000);
+          }
 
           // Save state after unsuccessful attempt
           saveQuizState(currentQuizId);
