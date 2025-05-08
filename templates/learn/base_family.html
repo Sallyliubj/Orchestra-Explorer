@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Back to Overview Button -->
+<div class="mb-4">
+    <a href="{{ url_for('learn_overview') }}" class="btn btn-outline-secondary button-color">
+        &larr; Back to Overview
+    </a>
+</div>
+
+<div class="container py-5">
+    <!-- Progress Indicator -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">{{ family|title }} Family Progress</h5>
+                <span class="progress-text">{{ viewed_count }}/{{ total_instruments }} Instruments</span>
+            </div>
+            <div class="progress mt-2" style="height: 20px;">
+                <div class="progress-bar bg-primary" role="progressbar" 
+                     style="width: {{ (viewed_count / total_instruments * 100)|round }}%;" 
+                     aria-valuenow="{{ (viewed_count / total_instruments * 100)|round }}" 
+                     aria-valuemin="0" 
+                     aria-valuemax="100">
+                    {{ (viewed_count / total_instruments * 100)|round }}%
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="text-center mb-4">Meet the {{ family|title }} Family</h1>
+    <p class="lead text-center mb-5">Click each instrument to learn more</p>
+
+    {% block family_content %}{% endblock %}
+</div>
+
+<style>
+.progress {
+    background-color: #e9ecef;
+    border-radius: 0.5rem;
+}
+
+.progress-bar {
+    transition: width 0.6s ease;
+}
+
+.progress-text {
+    font-weight: 500;
+    color: #495057;
+}
+</style>
+{% endblock %} 
