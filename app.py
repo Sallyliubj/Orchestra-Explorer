@@ -85,7 +85,38 @@ def is_instrument_viewed(family, instrument):
 @app.route('/learn')
 def learn_overview():
     log_interaction("Visited Learn Overview Page")
-    return render_template('learn/overview.html')
+    
+    # Calculate progress for each family
+    family_progress = {}
+    family_total = {}
+    total_viewed = 0
+    total_instruments = 0
+    
+    for family, instruments in INSTRUMENTS_BY_FAMILY.items():
+        viewed_count = 0
+        for instrument in instruments:
+            if is_instrument_viewed(family, instrument):
+                viewed_count += 1
+                total_viewed += 1
+            total_instruments += 1
+        family_progress[family] = viewed_count
+        family_total[family] = len(instruments)
+    
+    # Family descriptions
+    family_descriptions = {
+        'strings': 'The string family includes instruments that produce sound through vibrating strings.',
+        'woodwinds': 'Woodwind instruments create sound by blowing air through a mouthpiece or reed.',
+        'brass': 'Brass instruments produce sound through the vibration of the player\'s lips.',
+        'percussion': 'Percussion instruments create sound when struck, shaken, or scraped.'
+    }
+    
+    return render_template('learn/overview.html',
+                         families=FAMILY_ORDER,
+                         family_descriptions=family_descriptions,
+                         family_progress=family_progress,
+                         family_total=family_total,
+                         total_viewed=total_viewed,
+                         total_instruments=total_instruments)
 
 @app.route('/learn/<family>')
 def learn_family(family):
@@ -96,10 +127,20 @@ def learn_family(family):
     
     # Get viewed status for each instrument
     viewed_status = {}
-    for instrument in INSTRUMENTS_BY_FAMILY[family]:
-        viewed_status[instrument] = is_instrument_viewed(family, instrument)
+    viewed_count = 0
+    total_instruments = len(INSTRUMENTS_BY_FAMILY[family])
     
-    return render_template(f'learn/{family}.html', viewed_status=viewed_status)
+    for instrument in INSTRUMENTS_BY_FAMILY[family]:
+        is_viewed = is_instrument_viewed(family, instrument)
+        viewed_status[instrument] = is_viewed
+        if is_viewed:
+            viewed_count += 1
+    
+    return render_template(f'learn/{family}.html', 
+                         family=family,
+                         viewed_status=viewed_status,
+                         viewed_count=viewed_count,
+                         total_instruments=total_instruments)
 
 @app.route('/learn/<family>/<instrument>')
 def learn_instrument(family, instrument):
@@ -134,6 +175,10 @@ def learn_instrument(family, instrument):
 @app.route('/quiz')
 @app.route('/quiz/<int:quiz_id>')
 def quiz(quiz_id=None):
+    # Check if learning is completed before allowing quiz access
+    if not are_all_instruments_viewed():
+        return render_template('quiz_locked.html')
+    
     if quiz_id is None:
         # Initial quiz page (start)
         return render_template('quiz/start.html')
@@ -184,6 +229,42 @@ def is_quiz_completed():
         if interaction['action'] == "Accessed Quiz Question 8":
             return True
     return False
+
+@app.route('/learn/progress')
+def learn_progress():
+    log_interaction("Visited Learning Progress Page")
+    
+    # Calculate progress for each family
+    family_progress = {}
+    family_total = {}
+    total_viewed = 0
+    total_instruments = 0
+    
+    for family, instruments in INSTRUMENTS_BY_FAMILY.items():
+        viewed_count = 0
+        for instrument in instruments:
+            if is_instrument_viewed(family, instrument):
+                viewed_count += 1
+                total_viewed += 1
+            total_instruments += 1
+        family_progress[family] = viewed_count
+        family_total[family] = len(instruments)
+    
+    # Family descriptions
+    family_descriptions = {
+        'strings': 'The string family includes instruments that produce sound through vibrating strings.',
+        'woodwinds': 'Woodwind instruments create sound by blowing air through a mouthpiece or reed.',
+        'brass': 'Brass instruments produce sound through the vibration of the player\'s lips.',
+        'percussion': 'Percussion instruments create sound when struck, shaken, or scraped.'
+    }
+    
+    return render_template('learn/progress.html',
+                         families=FAMILY_ORDER,
+                         family_descriptions=family_descriptions,
+                         family_progress=family_progress,
+                         family_total=family_total,
+                         total_viewed=total_viewed,
+                         total_instruments=total_instruments)
 
 if __name__ == '__main__':
     app.run(debug=True)
