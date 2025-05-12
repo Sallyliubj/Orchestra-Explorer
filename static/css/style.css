@@ -304,24 +304,35 @@ h3 {
 }
 
 .sound-button {
-  background-color: #f0ca4d;
+  background-color: var(--primary-brown);
+  color: var(--light-gold);
   border: none;
-  padding: 15px 20px;
-  font-size: 18px;
+  padding: 10px 20px;
+  border-radius: 25px;
   cursor: pointer;
-  border-radius: 5px;
-  margin: 20px auto;
-  display: block;
-  width: auto; /* Change from 100% to auto */
-  min-width: 200px;
-  max-width: 300px;
-  height: 60px;
-  transition: background-color 0.3s ease;
-  box-sizing: border-box;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  margin: 10px;
 }
 
 .sound-button:hover {
-  background-color: #e6b800;
+  background-color: var(--secondary-brown);
+  transform: scale(1.05);
+}
+
+.sound-button.active {
+  background-color: var(--golden-yellow);
+  color: var(--primary-brown);
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(218, 165, 32, 0.5);
+  font-weight: bold;
+}
+
+.sound-button.connected {
+  background-color: #4CAF50;
+  color: white;
+  cursor: default;
+  opacity: 0.8;
 }
 
 .dropzone-container {
