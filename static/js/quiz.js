@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const question7 = document.getElementById("question-7");
   const quizComplete = document.getElementById("quiz-complete");
 
+  
   // Get current question ID from URL
   const pathParts = window.location.pathname.split("/");
   const currentQuizId = parseInt(pathParts[pathParts.length - 1]) || 0;
@@ -174,14 +175,29 @@ document.addEventListener("DOMContentLoaded", function () {
       localStorage.setItem(`quiz_${questionId}_attempts`, attempts.toString());
       updateAttemptCounter();
 
-      // If it's a wrong answer, show error feedback
+    
+      // If it's a wrong answer, show specific feedback
       if (!option.hasAttribute("data-correct")) {
-        const errorFeedback = parentQuestion.querySelector(
-          ".feedback:not(.success)"
+        const selectedValue = option.getAttribute("data-value");
+
+        // Specific feedback element
+        const specificFeedback = parentQuestion.querySelector(
+          `#feedback-${questionId}-${selectedValue}`
         );
-        if (errorFeedback) {
-          errorFeedback.style.display = "block";
-          if (checkbox) checkbox.innerHTML = "✗";
+
+        // General fallback feedback (if no specific one exists)
+        const fallbackFeedback = parentQuestion.querySelector(
+          `.feedback:not(.success):not([id^="feedback-${questionId}-"])`
+        );
+
+        // Hide all feedback first
+        parentQuestion.querySelectorAll(".feedback").forEach(f => f.style.display = "none");
+
+        // Show the appropriate feedback
+        if (specificFeedback) {
+          specificFeedback.style.display = "block";
+        } else if (fallbackFeedback) {
+          fallbackFeedback.style.display = "block";
         }
 
         // Check if max attempts reached
@@ -308,31 +324,37 @@ document.addEventListener("DOMContentLoaded", function () {
           //   window.location.href =
           //     currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
           // }, 1000);
-        } else {
-          // Wrong answer - only increment attempts for incorrect submissions
-          if (errorFeedback) errorFeedback.style.display = "block";
+        }else {
+          const generalErrorMessages = [
+            "Try again! Does this instrument use air, strings, or physical impact to produce sound?",
+            "Think carefully—this instrument doesn’t use a bow or breath. How else could it make sound?",
+            "Remember: percussion instruments are often hit with mallets or hands.",
+          ];
+        
+          // Pick a random message
+          const randomMsg = generalErrorMessages[Math.floor(Math.random() * generalErrorMessages.length)];
+        
+          // Show it in feedback-4
+          if (errorFeedback) {
+            errorFeedback.textContent = randomMsg;
+            errorFeedback.style.display = "block";
+          }
+        
           familyInput.dataset.correct = "false";
-
-          // Increment attempts only for incorrect submissions
+        
           attempts++;
-          localStorage.setItem(
-            `quiz_${currentQuizId}_attempts`,
-            attempts.toString()
-          );
+          localStorage.setItem(`quiz_${currentQuizId}_attempts`, attempts.toString());
           updateAttemptCounter();
-
-          // Check if max attempts reached
+        
           if (attempts >= 3) {
             alert("Maximum attempts reached. Moving to next question.");
             setTimeout(() => {
-              window.location.href =
-                currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+              window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
             }, 1000);
           }
-        }
-
-        // Save the state
-        saveQuizState(currentQuizId);
+        
+          saveQuizState(currentQuizId);
+        }        
       };
 
       // Check answer on button click
@@ -889,7 +911,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const successFeedback = document.getElementById("success-3");
 
         // Hide all feedback first
-        if (errorFeedback) errorFeedback.style.display = "none";
+       // Hide all feedback including specific instrument ones
+        document.querySelectorAll("#question-3 .feedback").forEach((f) => f.style.display = "none");
         if (successFeedback) successFeedback.style.display = "none";
 
         if (this.dataset.category === category) {
@@ -925,8 +948,20 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         } else {
           // Wrong drop - only increment attempts for incorrect placements
-          if (errorFeedback) errorFeedback.style.display = "block";
-
+        
+          // Hide all feedback first
+          document.querySelectorAll("#question-3 .feedback").forEach((f) => f.style.display = "none");
+        
+          // Get instrument name from alt attribute
+          const instrumentName = dragging.getAttribute("alt").toLowerCase(); // e.g., "violin"
+          const specificFeedback = document.getElementById(`feedback-3-${instrumentName}`);
+        
+          // Show specific feedback if it exists
+          if (specificFeedback) {
+            specificFeedback.style.display = "block";
+          } else if (errorFeedback) {
+            errorFeedback.style.display = "block";
+          }
           // Increment attempts only for incorrect placements
           attempts++;
           localStorage.setItem(
@@ -1091,13 +1126,23 @@ document.addEventListener("DOMContentLoaded", function () {
             //     currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
             // }, 1000);
           }
-
           // Save state after successful connection
           saveQuizState(currentQuizId);
         } else {
           // Wrong match - only increment attempts for incorrect connections
-          if (errorFeedback) errorFeedback.style.display = "block";
-
+          const generalErrorMessages = [
+            "Not quite! Try focusing on the brightness or depth of the sound.",
+            "Try again! Is the sound high (Violin), mid (Viola or Cello), or low (Double Bass)?",
+            "Listen closely—does the sound feel light and sharp, rich and warm, or deep and heavy? That can help you match it."
+          ];          
+          
+          // Show a random feedback message
+          if (errorFeedback) {
+            const randomMsg = generalErrorMessages[Math.floor(Math.random() * generalErrorMessages.length)];
+            errorFeedback.textContent = randomMsg;
+            errorFeedback.style.display = "block";
+          }
+               
           // Increment attempts only for incorrect connections
           attempts++;
           localStorage.setItem(
@@ -1261,7 +1306,19 @@ document.addEventListener("DOMContentLoaded", function () {
           saveQuizState(currentQuizId);
         } else {
           // Wrong match - only increment attempts for incorrect connections
-          if (errorFeedback) errorFeedback.style.display = "block";
+          const generalErrorMessages = [
+            "Try focusing on sound production (flute = breath, violin = bow, trumpet = lips + valves).",
+            "Not quite! Think about both shape and how it's played (violin = small with strings, flute = long tube, trumpet = coiled brass).",
+            "Look closely—how does each instrument produce sound, and what does its structure tell you? (violin = strings, flute = mouthpiece, trumpet = valves and bell)."
+          ];          
+          
+          // Show a random feedback message
+          if (errorFeedback) {
+            const randomMsg = generalErrorMessages[Math.floor(Math.random() * generalErrorMessages.length)];
+            errorFeedback.textContent = randomMsg;
+            errorFeedback.style.display = "block";
+          }
+             
 
           // Increment attempts only for incorrect connections
           attempts++;
