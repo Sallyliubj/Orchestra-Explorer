@@ -16,28 +16,39 @@ document.addEventListener("DOMContentLoaded", function () {
   const currentQuizId = parseInt(pathParts[pathParts.length - 1]) || 0;
 
   // Initialize score and attempts tracking
-  let currentScore = localStorage.getItem("quizScore") ? parseInt(localStorage.getItem("quizScore")) : 0;
-  let attempts = localStorage.getItem(`quiz_${currentQuizId}_attempts`) ? parseInt(localStorage.getItem(`quiz_${currentQuizId}_attempts`)) : 0;
-  let questionAnswered = localStorage.getItem(`quiz_${currentQuizId}_answered`) ? localStorage.getItem(`quiz_${currentQuizId}_answered`) === 'true' : false;
+  let currentScore = localStorage.getItem("quizScore")
+    ? parseInt(localStorage.getItem("quizScore"))
+    : 0;
+  let attempts = localStorage.getItem(`quiz_${currentQuizId}_attempts`)
+    ? parseInt(localStorage.getItem(`quiz_${currentQuizId}_attempts`))
+    : 0;
+
+  // Load answered status
+  function loadQuestionAnsweredStatus(questionId) {
+    return localStorage.getItem(`quiz_${questionId}_answered`) === "true";
+  }
+
+  // Initialize question answered status
+  let questionAnswered = loadQuestionAnsweredStatus(currentQuizId);
 
   // Show score displays during quiz
   const scoreDisplays = document.querySelectorAll(".score-display");
   const totalQuestions = 7; // Total number of questions in the quiz
-  
+
   // Create and update attempt counter
   function createAttemptCounter() {
-    const quizContainer = document.querySelector('.quiz-container');
+    const quizContainer = document.querySelector(".quiz-container");
     if (!quizContainer) return;
 
     // Remove existing attempt counter if any
-    const existingCounter = document.getElementById('attempt-counter');
+    const existingCounter = document.getElementById("attempt-counter");
     if (existingCounter) {
       existingCounter.remove();
     }
 
     // Create new attempt counter
-    const attemptCounter = document.createElement('div');
-    attemptCounter.id = 'attempt-counter';
+    const attemptCounter = document.createElement("div");
+    attemptCounter.id = "attempt-counter";
     attemptCounter.style.cssText = `
       position: absolute;
       top: 10px;
@@ -49,18 +60,18 @@ document.addEventListener("DOMContentLoaded", function () {
       color: #333;
     `;
     attemptCounter.textContent = `Attempts: ${attempts}/3`;
-    quizContainer.style.position = 'relative';
+    quizContainer.style.position = "relative";
     quizContainer.appendChild(attemptCounter);
   }
 
   // Update attempt counter
   function updateAttemptCounter() {
-    const attemptCounter = document.getElementById('attempt-counter');
+    const attemptCounter = document.getElementById("attempt-counter");
     if (attemptCounter) {
       attemptCounter.textContent = `Attempts: ${attempts}/3`;
     }
   }
-  
+
   // Update all score displays
   function updateScoreDisplays() {
     scoreDisplays.forEach((display) => {
@@ -122,15 +133,22 @@ document.addEventListener("DOMContentLoaded", function () {
   const options = document.querySelectorAll(".option");
   options.forEach((option) => {
     option.addEventListener("click", () => {
+      // Get current question ID from the option's container
+      const questionContainer = option.closest(".quiz-container");
+      const questionId = questionContainer
+        ? parseInt(questionContainer.id.split("-")[1])
+        : currentQuizId;
+
       // Skip if question already answered correctly
-      if (questionAnswered) {
+      if (localStorage.getItem(`quiz_${questionId}_answered`) === "true") {
         return;
       }
 
       // Check if max attempts reached
       if (attempts >= 3) {
         alert("Maximum attempts reached. Moving to next question.");
-        window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+        window.location.href =
+          questionId === 7 ? "/quiz/8" : `/quiz/${questionId + 1}`;
         return;
       }
 
@@ -153,46 +171,45 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Increment attempts
       attempts++;
-      localStorage.setItem(`quiz_${currentQuizId}_attempts`, attempts.toString());
+      localStorage.setItem(`quiz_${questionId}_attempts`, attempts.toString());
       updateAttemptCounter();
 
       // If it's a wrong answer, show error feedback
       if (!option.hasAttribute("data-correct")) {
-        const errorFeedback = parentQuestion.querySelector(".feedback:not(.success)");
+        const errorFeedback = parentQuestion.querySelector(
+          ".feedback:not(.success)"
+        );
         if (errorFeedback) {
           errorFeedback.style.display = "block";
           if (checkbox) checkbox.innerHTML = "✗";
         }
-        
+
         // Check if max attempts reached
         if (attempts >= 3) {
           alert("Maximum attempts reached. Moving to next question.");
           setTimeout(() => {
-            window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+            window.location.href =
+              questionId === 7 ? "/quiz/8" : `/quiz/${questionId + 1}`;
           }, 1000);
         }
       } else {
         // Show success feedback
-        const successFeedback = parentQuestion.querySelector(".feedback.success");
+        const successFeedback =
+          parentQuestion.querySelector(".feedback.success");
         if (successFeedback) successFeedback.style.display = "block";
         if (checkbox) checkbox.innerHTML = "✓";
-        
+
         // Add point for correct answer
         currentScore += 1;
         localStorage.setItem("quizScore", currentScore.toString());
-        localStorage.setItem(`quiz_${currentQuizId}_answered`, 'true');
-        
+        localStorage.setItem(`quiz_${questionId}_answered`, "true");
+
         // Update score display
         updateScoreDisplays();
-        
-        // Move to next question after short delay
-        setTimeout(() => {
-          window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
-        }, 1000);
       }
 
       // Save the state of the current question
-      saveQuizState(currentQuizId);
+      saveQuizState(questionId);
     });
   });
 
@@ -282,28 +299,34 @@ document.addEventListener("DOMContentLoaded", function () {
           // Add point for correct answer
           currentScore += 1;
           localStorage.setItem("quizScore", currentScore.toString());
-          localStorage.setItem(`quiz_${currentQuizId}_answered`, 'true');
+          localStorage.setItem(`quiz_${currentQuizId}_answered`, "true");
           // Update score display
           updateScoreDisplays();
-          // Move to next question after short delay
-          setTimeout(() => {
-            window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
-          }, 1000);
+
+          // Remove automatic navigation to next question
+          // setTimeout(() => {
+          //   window.location.href =
+          //     currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+          // }, 1000);
         } else {
           // Wrong answer - only increment attempts for incorrect submissions
           if (errorFeedback) errorFeedback.style.display = "block";
           familyInput.dataset.correct = "false";
-          
+
           // Increment attempts only for incorrect submissions
           attempts++;
-          localStorage.setItem(`quiz_${currentQuizId}_attempts`, attempts.toString());
+          localStorage.setItem(
+            `quiz_${currentQuizId}_attempts`,
+            attempts.toString()
+          );
           updateAttemptCounter();
-          
+
           // Check if max attempts reached
           if (attempts >= 3) {
             alert("Maximum attempts reached. Moving to next question.");
             setTimeout(() => {
-              window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+              window.location.href =
+                currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
             }, 1000);
           }
         }
@@ -436,6 +459,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const savedState = localStorage.getItem(`quiz_${questionId}_state`);
     if (!savedState) return;
 
+    // Get question answered status
+    const isAnswered =
+      localStorage.getItem(`quiz_${questionId}_answered`) === "true";
+
     try {
       const state = JSON.parse(savedState);
 
@@ -449,7 +476,27 @@ document.addEventListener("DOMContentLoaded", function () {
               `#question-${questionId} .option[data-value="${state.selectedValue}"]`
             );
             if (option) {
-              option.click(); // Simulate click to trigger the selection logic
+              // Don't trigger click which would reprocess the logic
+              // Instead, just update the visual state
+              const questionOptions = option
+                .closest(".quiz-container")
+                .querySelectorAll(".option");
+              questionOptions.forEach((opt) => {
+                opt.classList.remove("selected");
+                const checkbox = opt.querySelector(".option-checkbox");
+                if (checkbox) checkbox.innerHTML = "";
+              });
+
+              // Add selected class to the option
+              option.classList.add("selected");
+
+              // Update checkbox if needed
+              const checkbox = option.querySelector(".option-checkbox");
+              if (checkbox && option.hasAttribute("data-correct")) {
+                checkbox.innerHTML = "✓";
+              } else if (checkbox) {
+                checkbox.innerHTML = "✗";
+              }
             }
           }
           break;
@@ -468,19 +515,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (state.inputCorrect) {
               textInput.dataset.correct = state.inputCorrect;
-
-              // Show appropriate feedback
-              const errorFeedback = document.getElementById("feedback-4");
-              const successFeedback = document.getElementById("success-4");
-
-              if (errorFeedback) errorFeedback.style.display = "none";
-              if (successFeedback) successFeedback.style.display = "none";
-
-              if (state.inputCorrect === "true" && successFeedback) {
-                successFeedback.style.display = "block";
-              } else if (state.inputCorrect === "false" && errorFeedback) {
-                errorFeedback.style.display = "block";
-              }
             }
           }
           break;
@@ -493,17 +527,22 @@ document.addEventListener("DOMContentLoaded", function () {
           break;
       }
 
-      // Restore feedback visibility if not handled by other logic
-      if (state.errorFeedbackVisible || state.successFeedbackVisible) {
-        const errorFeedback = document.querySelector(`#feedback-${questionId}`);
-        const successFeedback = document.querySelector(
-          `#success-${questionId}`
-        );
+      // Restore feedback visibility based on whether the question was answered correctly
+      const errorFeedback = document.querySelector(`#feedback-${questionId}`);
+      const successFeedback = document.querySelector(`#success-${questionId}`);
 
+      if (errorFeedback) errorFeedback.style.display = "none";
+      if (successFeedback) successFeedback.style.display = "none";
+
+      // If the question is already answered correctly, show success feedback
+      if (isAnswered) {
+        if (successFeedback) successFeedback.style.display = "block";
+      }
+      // Otherwise show the appropriate feedback based on saved state
+      else if (state.errorFeedbackVisible || state.successFeedbackVisible) {
         if (errorFeedback && state.errorFeedbackVisible) {
           errorFeedback.style.display = "block";
         }
-
         if (successFeedback && state.successFeedbackVisible) {
           successFeedback.style.display = "block";
         }
@@ -516,7 +555,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Function to validate current question
   function validateCurrentQuestion(questionId) {
     // Skip validation if question already answered correctly
-    if (questionAnswered) {
+    if (localStorage.getItem(`quiz_${questionId}_answered`) === "true") {
       return true;
     }
 
@@ -535,6 +574,12 @@ document.addEventListener("DOMContentLoaded", function () {
           alert("Please select an answer before proceeding.");
           return false;
         }
+
+        // If the selected option is correct, mark the question as answered
+        if (selectedOption.hasAttribute("data-correct")) {
+          localStorage.setItem(`quiz_${questionId}_answered`, "true");
+        }
+
         return true;
 
       case 3:
@@ -551,7 +596,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         if (!allPlaced) {
-          alert("Please place all instruments in their correct families before proceeding.");
+          alert(
+            "Please place all instruments in their correct families before proceeding."
+          );
           return false;
         }
         return true;
@@ -560,6 +607,11 @@ document.addEventListener("DOMContentLoaded", function () {
         // Text input question
         const textInput = document.getElementById("family-input");
         if (!textInput) return true;
+
+        // If question is already answered correctly, allow proceeding
+        if (localStorage.getItem(`quiz_${questionId}_answered`) === "true") {
+          return true;
+        }
 
         // If no input given
         if (textInput.value.trim() === "") {
@@ -585,7 +637,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Add point for correct answer
             currentScore += 1;
             localStorage.setItem("quizScore", currentScore.toString());
-            localStorage.setItem(`quiz_${currentQuizId}_answered`, 'true');
+            localStorage.setItem(`quiz_${questionId}_answered`, "true");
             // Update score display
             updateScoreDisplays();
             // Save state after validation
@@ -595,18 +647,21 @@ document.addEventListener("DOMContentLoaded", function () {
             // Wrong answer - only increment attempts for incorrect submissions
             if (errorFeedback) errorFeedback.style.display = "block";
             textInput.dataset.correct = "false";
-            
+
             // Increment attempts only for incorrect submissions
             attempts++;
-            localStorage.setItem(`quiz_${currentQuizId}_attempts`, attempts.toString());
+            localStorage.setItem(
+              `quiz_${questionId}_attempts`,
+              attempts.toString()
+            );
             updateAttemptCounter();
-            
+
             // Check if max attempts reached
             if (attempts >= 3) {
               alert("Maximum attempts reached. Moving to next question.");
               return true;
             }
-            
+
             alert("Please enter the correct answer before proceeding.");
             return false;
           }
@@ -622,7 +677,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       case 6:
         // Sound matching question
-        const soundConnections = document.querySelectorAll(".sound-button.connected");
+        const soundConnections = document.querySelectorAll(
+          ".sound-button.connected"
+        );
         if (soundConnections.length < 3) {
           alert("Please complete all sound connections before proceeding.");
           return false;
@@ -631,7 +688,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       case 7:
         // Name matching question
-        const nameConnections = document.querySelectorAll(".name-item.connected");
+        const nameConnections = document.querySelectorAll(
+          ".name-item.connected"
+        );
         if (nameConnections.length < 3) {
           alert("Please connect all names to instruments before proceeding.");
           return false;
@@ -854,28 +913,34 @@ document.addEventListener("DOMContentLoaded", function () {
             // Add point for correct answer
             currentScore += 1;
             localStorage.setItem("quizScore", currentScore.toString());
-            localStorage.setItem(`quiz_${currentQuizId}_answered`, 'true');
+            localStorage.setItem(`quiz_${currentQuizId}_answered`, "true");
             // Update score display
             updateScoreDisplays();
-            // Move to next question after short delay
-            setTimeout(() => {
-              window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
-            }, 1000);
+
+            // No longer automatically move to next question
+            // setTimeout(() => {
+            //   window.location.href =
+            //     currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+            // }, 1000);
           }
         } else {
           // Wrong drop - only increment attempts for incorrect placements
           if (errorFeedback) errorFeedback.style.display = "block";
-          
+
           // Increment attempts only for incorrect placements
           attempts++;
-          localStorage.setItem(`quiz_${currentQuizId}_attempts`, attempts.toString());
+          localStorage.setItem(
+            `quiz_${currentQuizId}_attempts`,
+            attempts.toString()
+          );
           updateAttemptCounter();
-          
+
           // Check if max attempts reached
           if (attempts >= 3) {
             alert("Maximum attempts reached. Moving to next question.");
             setTimeout(() => {
-              window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+              window.location.href =
+                currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
             }, 1000);
           }
         }
@@ -1016,13 +1081,15 @@ document.addEventListener("DOMContentLoaded", function () {
             // Add point for correct answer
             currentScore += 1;
             localStorage.setItem("quizScore", currentScore.toString());
-            localStorage.setItem(`quiz_${currentQuizId}_answered`, 'true');
+            localStorage.setItem(`quiz_${currentQuizId}_answered`, "true");
             // Update score display
             updateScoreDisplays();
-            // Move to next question after short delay
-            setTimeout(() => {
-              window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
-            }, 1000);
+
+            // No longer automatically move to next question
+            // setTimeout(() => {
+            //   window.location.href =
+            //     currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+            // }, 1000);
           }
 
           // Save state after successful connection
@@ -1030,17 +1097,21 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           // Wrong match - only increment attempts for incorrect connections
           if (errorFeedback) errorFeedback.style.display = "block";
-          
+
           // Increment attempts only for incorrect connections
           attempts++;
-          localStorage.setItem(`quiz_${currentQuizId}_attempts`, attempts.toString());
+          localStorage.setItem(
+            `quiz_${currentQuizId}_attempts`,
+            attempts.toString()
+          );
           updateAttemptCounter();
-          
+
           // Check if max attempts reached
           if (attempts >= 3) {
             alert("Maximum attempts reached. Moving to next question.");
             setTimeout(() => {
-              window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+              window.location.href =
+                currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
             }, 1000);
           }
 
@@ -1175,13 +1246,15 @@ document.addEventListener("DOMContentLoaded", function () {
             // Add point for correct answer
             currentScore += 1;
             localStorage.setItem("quizScore", currentScore.toString());
-            localStorage.setItem(`quiz_${currentQuizId}_answered`, 'true');
+            localStorage.setItem(`quiz_${currentQuizId}_answered`, "true");
             // Update score display
             updateScoreDisplays();
-            // Move to next question after short delay
-            setTimeout(() => {
-              window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
-            }, 1000);
+
+            // No longer automatically move to next question
+            // setTimeout(() => {
+            //   window.location.href =
+            //     currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+            // }, 1000);
           }
 
           // Save state after successful connection
@@ -1189,17 +1262,21 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           // Wrong match - only increment attempts for incorrect connections
           if (errorFeedback) errorFeedback.style.display = "block";
-          
+
           // Increment attempts only for incorrect connections
           attempts++;
-          localStorage.setItem(`quiz_${currentQuizId}_attempts`, attempts.toString());
+          localStorage.setItem(
+            `quiz_${currentQuizId}_attempts`,
+            attempts.toString()
+          );
           updateAttemptCounter();
-          
+
           // Check if max attempts reached
           if (attempts >= 3) {
             alert("Maximum attempts reached. Moving to next question.");
             setTimeout(() => {
-              window.location.href = currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
+              window.location.href =
+                currentQuizId === 7 ? "/quiz/8" : `/quiz/${currentQuizId + 1}`;
             }, 1000);
           }
 
@@ -1257,10 +1334,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const toRect = to.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
 
-    // Create line element
-    const line = document.createElement("div");
-    line.classList.add("connection-line");
-
     // Calculate positions relative to container
     const fromX = fromRect.right - containerRect.left;
     const fromY = fromRect.top + fromRect.height / 2 - containerRect.top;
@@ -1274,6 +1347,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const angle = (Math.atan2(toY - fromY, toX - fromX) * 180) / Math.PI;
 
     // Set line styles
+    const line = document.createElement("div");
+    line.classList.add("connection-line");
     line.style.width = `${length}px`;
     line.style.left = `${fromX}px`;
     line.style.top = `${fromY}px`;
