@@ -11,6 +11,8 @@ Welcome to Orchestra Explorer, an interactive web application that helps users e
 - Audio samples of instruments
 - User-friendly navigation and intuitive interface
 
+![Strings Family Screenshot](strings.png)
+![Cello Detail Screenshot](cello.png)
 
 ## Setup
 
@@ -41,3 +43,7 @@ python app.py
 ```
 
 The app will be running at http://127.0.0.1:5000
+
+
+---
+This project was developed as part of a collaborative effort for Columbia University's COMS 4170 UI Design course. 
