@@ -1,13 +1,24 @@
 # Orchestra Explorer
 
+Welcome to Orchestra Explorer, an interactive web application that helps users explore and learn about different sections and instruments in an orchestra. This educational tool provides detailed information about various orchestral instruments, their roles, and their unique characteristics, making it an excellent resource for music students and enthusiasts.
 
-### Setup
+![Homepage Screenshot](homepage.png)
+
+## Features
+- Interactive orchestra layout visualization
+- Detailed information about different instrument sections
+- Individual instrument descriptions and characteristics
+- Audio samples of instruments
+- User-friendly navigation and intuitive interface
+
+
+## Setup
 
 1. Clone this repository
 
 ``` 
-git clone https://github.com/qrran/UI_Project.git 
-cd UI_Project
+git clone https://github.com/Sallyliubj/Orchestra-Explorer.git
+cd Orchestra-Explorer
 ```
 
 2. Create a virtual environment:
